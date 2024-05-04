@@ -1,0 +1,33 @@
+{
+  "originHash" : "3bb6f200798481bc27e2c587c62aa0ffb39a0a2a6d87e617a20fc6abf031289b",
+  "pins" : [
+    {
+      "identity" : "calendarview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mijick/CalendarView.git",
+      "state" : {
+        "revision" : "b347587ba39a023b61881158872db9d01a90a9a6",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "navigattie",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mijick/Navigattie",
+      "state" : {
+        "revision" : "214a9fb96ee859216083b8f3bc59a0ba95f67449",
+        "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "partialsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreaMiotto/PartialSheet",
+      "state" : {
+        "revision" : "6c61890976181274ea7baf6a4c297418346db799",
+        "version" : "3.1.1"
+      }
+    }
+  ],
+  "version" : 3
+}
