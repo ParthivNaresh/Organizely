@@ -11,18 +11,17 @@ struct TaskRowView: View {
     @ObservedObject var task: ProjectTask
     @Environment(\.managedObjectContext) var viewContext
     @State private var settingsDetent = PresentationDetent.fraction(0.2)
-    @State private var isMarkedComplete = false
     @State private var address: String = "Loading address..."
     @State private var isShowingDetails = false
     
     var body: some View {
         HStack {
-            Image(systemName: isMarkedComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(isMarkedComplete ? .green : .gray)
+            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(task.isCompleted ? .green : .gray)
                 .onTapGesture {
                     toggleTaskCompletion()
                 }
-                .animation(.easeInOut, value: isMarkedComplete)
+                .animation(.easeInOut, value: task.isCompleted)
             VStack(alignment: .leading) {
                 Text(task.title ?? "Untitled Task")
                     .strikethrough(task.isCompleted, color: .gray)
@@ -57,14 +56,9 @@ struct TaskRowView: View {
                 .font(.caption)
             }
         }
-        .opacity(isMarkedComplete ? 0 : 1)
-        .offset(CGSize(width: 0, height: isMarkedComplete ? -10: 0))
         .contentShape(Rectangle())
         .onDisappear {
-            if isMarkedComplete {
-                task.isCompleted = true
-                saveContext()
-            }
+            saveContext()
         }
         .onTapGesture {
             self.isShowingDetails = true
@@ -80,12 +74,7 @@ struct TaskRowView: View {
     
     private func toggleTaskCompletion() {
         withAnimation {
-            isMarkedComplete = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            withAnimation {
-                task.isCompleted = true
-            }
+            task.isCompleted.toggle()
             saveContext()
         }
     }
