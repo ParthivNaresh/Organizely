@@ -9,66 +9,86 @@ import SwiftUI
 
 struct ProjectTasksListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var sortOption: SortOption = .priorityDescending
+    @State private var isPriorityAscending: Bool = true
+    @State private var isTitleAscending: Bool = true
     var project: Project
     
-    @FetchRequest private var projectTasks: FetchedResults<ProjectTask>
+    private var incompleteTasksRequest: FetchRequest<ProjectTask>
+    private var completeTasksRequest: FetchRequest<ProjectTask>
+
+    var incompleteTasks: FetchedResults<ProjectTask> { incompleteTasksRequest.wrappedValue }
+    var completeTasks: FetchedResults<ProjectTask> { completeTasksRequest.wrappedValue }
 
     init(project: Project) {
         self.project = project
-        _projectTasks = FetchRequest(
+        self.incompleteTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
             predicate: NSPredicate(format: "isCompleted == NO AND project == %@", project)
         )
+        self.completeTasksRequest = FetchRequest<ProjectTask>(
+            entity: ProjectTask.entity(),
+            sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
+            predicate: NSPredicate(format: "isCompleted == YES AND project == %@", project)
+        )
     }
     
-    enum SortOption: String, CaseIterable, Identifiable {
-        case priorityAscending = "Priority Ascending"
-        case priorityDescending = "Priority Descending"
-        
-        var id: String { self.rawValue }
-    }
-    
-    var sortedTasks: [ProjectTask] {
-        projectTasks.sorted {
-            switch sortOption {
-            case .priorityAscending:
-                return ($0.priority, $0.taskLabel ?? "") < ($1.priority, $1.taskLabel ?? "")
-            case .priorityDescending:
-                return ($0.priority, $0.taskLabel ?? "") > ($1.priority, $1.taskLabel ?? "")
+    var sortedCompletedTasks: [ProjectTask] {
+        completeTasks.sorted {
+            if $0.priority == $1.priority {
+                return isTitleAscending ? ($0.title ?? "") < ($1.title ?? "") : ($0.title ?? "") > ($1.title ?? "")
             }
+            return isPriorityAscending ? $0.priority < $1.priority : $0.priority > $1.priority
         }
     }
 
-    var body: some View {
-        Picker("Sort by:", selection: $sortOption) {
-            ForEach(SortOption.allCases) { option in
-                Text(option.rawValue).tag(option)
+    var sortedIncompletedTasks: [ProjectTask] {
+        incompleteTasks.sorted {
+            if $0.priority == $1.priority {
+                return isTitleAscending ? ($0.title ?? "") < ($1.title ?? "") : ($0.title ?? "") > ($1.title ?? "")
             }
+            return isPriorityAscending ? $0.priority < $1.priority : $0.priority > $1.priority
         }
-        .pickerStyle(SegmentedPickerStyle())
-        .padding()
-        .background(Color(UIColor.systemGroupedBackground))
+    }
+    
+    private func togglePrioritySort() {
+        isPriorityAscending.toggle()
+    }
+
+    private func toggleTitleSort() {
+        isTitleAscending.toggle()
+    }
+
+    var body: some View {
+        HStack {
+            Spacer()
+            SortButton(
+                title: "Priority",
+                isAscending: $isPriorityAscending,
+                action: togglePrioritySort
+            )
+            SortButton(
+                title: "Title",
+                isAscending: $isTitleAscending,
+                action: toggleTitleSort
+            )
+        }
         
         List {
-            ForEach(sortedTasks, id: \.self) { task in
-                TaskRowView(task: task)
-            }
-            .onDelete(perform: deleteProjectTask)
-        }
-        .listStyle(PlainListStyle())
-        .navigationTitle(project.title ?? "Project Tasks")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: addProjectTask) {
-                    Image(systemName: "plus")
+            Section(header: Text("To Do")) {
+                ForEach(sortedIncompletedTasks, id: \.self) { task in
+                    TaskRowView(task: task)
                 }
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
+
+            Section(header: Text("Completed")) {
+                ForEach(sortedCompletedTasks, id: \.self) { task in
+                    TaskRowView(task: task)
+                }
             }
         }
+        .padding(.top, 0)
+        .listStyle(PlainListStyle())
     }
 
     private func addProjectTask() {
@@ -80,19 +100,6 @@ struct ProjectTasksListView: View {
             newProjectTask.isCompleted = false
             newProjectTask.priority = 1
             newProjectTask.project = self.project
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteProjectTask(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { projectTasks[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()

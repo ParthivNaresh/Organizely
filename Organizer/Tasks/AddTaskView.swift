@@ -136,17 +136,17 @@ struct AddTaskView: View {
         } else {
             taskToSave = ProjectTask(context: viewContext)
             taskToSave.dateCreated = Date()  // Only set creation date for new tasks
+            taskToSave.isCompleted = false
         }
         
         taskToSave.title = taskName
         taskToSave.taskDescription = taskDescription
         taskToSave.dateDue = dateDue
-        taskToSave.dateCreated = Date()
+        taskToSave.dateUpdated = Date()
         taskToSave.priority = Int64(selectedPriority?.level ?? 3)
         taskToSave.taskLabel = selectedLabel?.name
         taskToSave.latitude = selectedLocation?.latitude ?? 0
         taskToSave.longitude = selectedLocation?.longitude ?? 0
-        taskToSave.isCompleted = false
 
         do {
             try viewContext.save()

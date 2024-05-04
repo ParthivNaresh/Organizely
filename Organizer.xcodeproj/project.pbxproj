@@ -12,7 +12,7 @@
 		C44210EF2BDDA88F009154B1 /* MijickCalendarView in Frameworks */ = {isa = PBXBuildFile; productRef = C44210EE2BDDA88F009154B1 /* MijickCalendarView */; };
 		C44830832BDEB35100525CE6 /* DatePickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */; };
 		C44830862BDEB3A700525CE6 /* LocationPickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */; };
-		C44830892BDEB40A00525CE6 /* Supporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830882BDEB40A00525CE6 /* Supporting.swift */; };
+		C44830892BDEB40A00525CE6 /* SupportingDatePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */; };
 		C448308C2BE1AFE300525CE6 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C448308B2BE1AFE300525CE6 /* AddProjectView.swift */; };
 		C480A8302BE45DD200B02160 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = C480A82F2BE45DD200B02160 /* PartialSheet */; };
 		C480A8322BE460D000B02160 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8312BE460D000B02160 /* Example.swift */; };
@@ -21,7 +21,9 @@
 		C480A8392BE563C700B02160 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8382BE563C700B02160 /* AddTaskView.swift */; };
 		C480A83B2BE565B900B02160 /* ProjectsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A83A2BE565B900B02160 /* ProjectsListView.swift */; };
 		C480A83D2BE5675D00B02160 /* SupportingAddProjectViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A83C2BE5675D00B02160 /* SupportingAddProjectViews.swift */; };
-		C4A341DD2BE3D44300A8CB5E /* SupportingStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A341DC2BE3D44300A8CB5E /* SupportingStruct.swift */; };
+		C480A8412BE6CBC500B02160 /* SupportingTabsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */; };
+		C480A8432BE6CC1400B02160 /* SupportingTodayTabViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */; };
+		C4A341DD2BE3D44300A8CB5E /* SupportingLocationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */; };
 		C4DFF40C2BD4815300D36F7E /* OrganizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DFF40B2BD4815300D36F7E /* OrganizerApp.swift */; };
 		C4DFF40E2BD4815300D36F7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DFF40D2BD4815300D36F7E /* ContentView.swift */; };
 		C4DFF4102BD4815400D36F7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4DFF40F2BD4815400D36F7E /* Assets.xcassets */; };
@@ -59,7 +61,7 @@
 		C41D9F982BDB0FA3004B85D3 /* SupportingAddTaskViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingAddTaskViews.swift; sourceTree = "<group>"; };
 		C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetView.swift; sourceTree = "<group>"; };
 		C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerSheetView.swift; sourceTree = "<group>"; };
-		C44830882BDEB40A00525CE6 /* Supporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supporting.swift; sourceTree = "<group>"; };
+		C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingDatePickerSheet.swift; sourceTree = "<group>"; };
 		C448308B2BE1AFE300525CE6 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
 		C480A8312BE460D000B02160 /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
 		C480A8342BE5622B00B02160 /* IconViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconViews.swift; sourceTree = "<group>"; };
@@ -67,7 +69,9 @@
 		C480A8382BE563C700B02160 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
 		C480A83A2BE565B900B02160 /* ProjectsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsListView.swift; sourceTree = "<group>"; };
 		C480A83C2BE5675D00B02160 /* SupportingAddProjectViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingAddProjectViews.swift; sourceTree = "<group>"; };
-		C4A341DC2BE3D44300A8CB5E /* SupportingStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingStruct.swift; sourceTree = "<group>"; };
+		C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingTabsViews.swift; sourceTree = "<group>"; };
+		C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingTodayTabViews.swift; sourceTree = "<group>"; };
+		C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingLocationPicker.swift; sourceTree = "<group>"; };
 		C4DFF4082BD4815300D36F7E /* Organizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Organizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4DFF40B2BD4815300D36F7E /* OrganizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerApp.swift; sourceTree = "<group>"; };
 		C4DFF40D2BD4815300D36F7E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -135,7 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */,
-				C44830882BDEB40A00525CE6 /* Supporting.swift */,
+				C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */,
 			);
 			path = CalendarSheet;
 			sourceTree = "<group>";
@@ -144,7 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */,
-				C4A341DC2BE3D44300A8CB5E /* SupportingStruct.swift */,
+				C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */,
 			);
 			path = LocationSheet;
 			sourceTree = "<group>";
@@ -155,6 +159,23 @@
 				C480A8342BE5622B00B02160 /* IconViews.swift */,
 			);
 			path = MiscViews;
+			sourceTree = "<group>";
+		};
+		C480A83E2BE6CBA200B02160 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				C480A83F2BE6CBB000B02160 /* ProjectsTab */,
+				C4DFF44B2BD5A6CD00D36F7E /* TodayTab */,
+				C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		C480A83F2BE6CBB000B02160 /* ProjectsTab */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ProjectsTab;
 			sourceTree = "<group>";
 		};
 		C4DFF3FF2BD4815300D36F7E = {
@@ -181,9 +202,9 @@
 		C4DFF40A2BD4815300D36F7E /* Organizer */ = {
 			isa = PBXGroup;
 			children = (
+				C480A83E2BE6CBA200B02160 /* Tabs */,
 				C480A8332BE5621D00B02160 /* MiscViews */,
 				C41D9F962BD76EFB004B85D3 /* NewTaskCreationSheet */,
-				C4DFF44B2BD5A6CD00D36F7E /* TodayTab */,
 				C4DFF4402BD575E200D36F7E /* Projects */,
 				C4DFF43F2BD575CF00D36F7E /* Tasks */,
 				C4DFF43E2BD575BA00D36F7E /* CoreDataControls */,
@@ -258,6 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				C4DFF44C2BD5A6DD00D36F7E /* TodayView.swift */,
+				C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */,
 			);
 			path = TodayTab;
 			sourceTree = "<group>";
@@ -402,6 +424,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C480A8432BE6CC1400B02160 /* SupportingTodayTabViews.swift in Sources */,
 				C4DFF4442BD5764100D36F7E /* ProjectRowView.swift in Sources */,
 				C480A8392BE563C700B02160 /* AddTaskView.swift in Sources */,
 				C4DFF4152BD4815400D36F7E /* Persistence.swift in Sources */,
@@ -418,10 +441,11 @@
 				C4DFF44A2BD5872900D36F7E /* ProjectTasksListView.swift in Sources */,
 				C480A8352BE5622B00B02160 /* IconViews.swift in Sources */,
 				C4DFF4182BD4815400D36F7E /* Organizer.xcdatamodeld in Sources */,
-				C44830892BDEB40A00525CE6 /* Supporting.swift in Sources */,
+				C44830892BDEB40A00525CE6 /* SupportingDatePickerSheet.swift in Sources */,
 				C4DFF4422BD575FC00D36F7E /* TaskRowView.swift in Sources */,
 				C480A83B2BE565B900B02160 /* ProjectsListView.swift in Sources */,
-				C4A341DD2BE3D44300A8CB5E /* SupportingStruct.swift in Sources */,
+				C480A8412BE6CBC500B02160 /* SupportingTabsViews.swift in Sources */,
+				C4A341DD2BE3D44300A8CB5E /* SupportingLocationPicker.swift in Sources */,
 				C480A83D2BE5675D00B02160 /* SupportingAddProjectViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
