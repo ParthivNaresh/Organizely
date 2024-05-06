@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct TodayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var isPriorityAscending: Bool = true
@@ -73,7 +74,7 @@ struct TodayView: View {
                     action: toggleTitleSort
                 )
             }
-            
+
             List {
                 Section(header: Text("To Do")) {
                     ForEach(sortedIncompletedTasks, id: \.self) { task in

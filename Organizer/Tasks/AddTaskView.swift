@@ -13,6 +13,7 @@ struct AddTaskView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var isVisible: Bool
     @FocusState private var isInputActive: Bool
+    var project: Project?
     var task: ProjectTask?
     
     @State private var taskName: String = ""
@@ -135,7 +136,7 @@ struct AddTaskView: View {
             taskToSave = existingTask
         } else {
             taskToSave = ProjectTask(context: viewContext)
-            taskToSave.dateCreated = Date()  // Only set creation date for new tasks
+            taskToSave.dateCreated = Date()
             taskToSave.isCompleted = false
         }
         
@@ -147,6 +148,7 @@ struct AddTaskView: View {
         taskToSave.taskLabel = selectedLabel?.name
         taskToSave.latitude = selectedLocation?.latitude ?? 0
         taskToSave.longitude = selectedLocation?.longitude ?? 0
+        taskToSave.project = project
 
         do {
             try viewContext.save()

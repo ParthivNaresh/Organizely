@@ -43,13 +43,13 @@ struct ContentView: View {
                 VStack {
                     TabView(selection: $selectedTab) {
                         TodayView()
-                        .tabItem {
-                            VStack {
-                                CalendarIconView(active: selectedTab == 0 ? true : false)
-                                Text("Today")
+                            .tabItem {
+                                VStack {
+                                    CalendarIconView(active: selectedTab == 0 ? true : false)
+                                    Text("Today")
+                                }
                             }
-                        }
-                        .tag(0)
+                            .tag(0)
                         ProjectsListView()
                             .tabItem {
                                 Label(Constants.Titles.projectsTitle, systemImage: "folder")

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TaskRowView: View {
     @ObservedObject var task: ProjectTask
+    var project: Project?
     @Environment(\.managedObjectContext) var viewContext
     @State private var settingsDetent = PresentationDetent.fraction(0.2)
     @State private var address: String = "Loading address..."
@@ -64,7 +65,7 @@ struct TaskRowView: View {
             self.isShowingDetails = true
         }
         .sheet(isPresented: $isShowingDetails) {
-            AddTaskView(isVisible: $isShowingDetails, task: task)
+            AddTaskView(isVisible: $isShowingDetails, project: project, task: task)
                 .presentationDetents(
                     [.fraction(0.2)],
                     selection: $settingsDetent
