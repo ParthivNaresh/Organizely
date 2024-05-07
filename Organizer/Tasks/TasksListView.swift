@@ -18,9 +18,9 @@ struct TasksListView: View {
         self.project = project
         let predicate: NSPredicate
         if let project = project {
-            predicate = NSPredicate(format: "isCompleted == NO AND project == %@", project)
+            predicate = NSPredicate(format: "isCompleted == false AND project == %@", project)
         } else {
-            predicate = NSPredicate(format: "isCompleted == NO")
+            predicate = NSPredicate(format: "isCompleted == false")
         }
         _projectTasks = FetchRequest(
             entity: ProjectTask.entity(),

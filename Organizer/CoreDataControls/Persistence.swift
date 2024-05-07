@@ -37,25 +37,25 @@ struct PersistenceController {
         let context = container.viewContext
 
         var projects: [Project] = []
-        for _ in 0..<5 {
+        for _ in 0..<20 {
             let projectEntity = Project(context: context)
             projectEntity.title = "Project \((1...100).randomElement()!)"
             projectEntity.projectDescription = "Project description for this project with extra words \((1...100).randomElement()!)"
             projectEntity.isCompleted = false
             projectEntity.priority = Int64(Constants.priorities.randomElement()?.level ?? 3)
-            projectEntity.dateDue = Date().addingTimeInterval(TimeInterval.random(in: 0...64000))
+            projectEntity.dateDue = Date().addingTimeInterval(TimeInterval.random(in: -90000...90000))
             projects.append(projectEntity)
         }
 
         // Create tasks and associate them with projects
-        for _ in 0..<50 {
+        for _ in 0..<150 {
             let taskEntity = ProjectTask(context: context)
             taskEntity.title = "Task \((1...100).randomElement()!)"
             taskEntity.taskDescription = "Task description for this project with extra words \((1...100).randomElement()!)"
             taskEntity.isCompleted = Bool.random()
             taskEntity.priority = Int64(Constants.priorities.randomElement()?.level ?? 3)
             taskEntity.taskLabel = Constants.labels.randomElement()?.name
-            taskEntity.dateDue = Date().addingTimeInterval(TimeInterval.random(in: -90000...64000))
+            taskEntity.dateDue = Date().addingTimeInterval(TimeInterval.random(in: -90000...90000))
             taskEntity.latitude = Double.random(in: -90...90)
             taskEntity.longitude = Double.random(in: -180...180)
 

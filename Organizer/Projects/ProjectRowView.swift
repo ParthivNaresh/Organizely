@@ -13,24 +13,30 @@ struct ProjectRowView: View {
     @ObservedObject var project: Project
     @Environment(\.managedObjectContext) private var viewContext
     
-    var completedTasksRequest: FetchRequest<ProjectTask>
-    var completedTasks: FetchedResults<ProjectTask> { completedTasksRequest.wrappedValue }
-
-    // Fetch not completed tasks for this project
-    var notCompletedTasksRequest: FetchRequest<ProjectTask>
-    var notCompletedTasks: FetchedResults<ProjectTask> { notCompletedTasksRequest.wrappedValue }
+    private var overdueTasksRequest: FetchRequest<ProjectTask>
+    private var completedTasksRequest: FetchRequest<ProjectTask>
+    private var incompleteTasksRequest: FetchRequest<ProjectTask>
+    
+    private var overdueTasks: FetchedResults<ProjectTask> { overdueTasksRequest.wrappedValue }
+    private var completedTasks: FetchedResults<ProjectTask> { completedTasksRequest.wrappedValue }
+    private var incompleteTasks: FetchedResults<ProjectTask> { incompleteTasksRequest.wrappedValue }
     
     init(project: Project) {
         self.project = project
+        overdueTasksRequest = FetchRequest<ProjectTask>(
+            entity: ProjectTask.entity(),
+            sortDescriptors: [],
+            predicate: NSPredicate(format: "isCompleted == false AND dateDue < %@ AND project == %@", Date() as NSDate, project)
+        )
         completedTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [],
-            predicate: NSPredicate(format: "project == %@ AND isCompleted == true", project)
+            predicate: NSPredicate(format: "isCompleted == true AND project == %@", project)
         )
-        notCompletedTasksRequest = FetchRequest<ProjectTask>(
+        incompleteTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [],
-            predicate: NSPredicate(format: "project == %@ AND isCompleted == false", project)
+            predicate: NSPredicate(format: "isCompleted == false AND dateDue >= %@ AND project == %@", Date() as NSDate, project)
         )
     }
 
@@ -45,24 +51,29 @@ struct ProjectRowView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
-
+            if let dateDue = project.dateDue {
+                Text("Due: \(dateDue, formatter: DateFormatter.projectFormatter)")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
             HStack {
-                if let dateDue = project.dateDue {
-                    Text("Due: \(dateDue, formatter: DateFormatter.projectFormatter)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
                 Spacer()
                 HStack(spacing: 4) {
-                    Text("\(completedTasks.count) Completed")
+                    Text("\(overdueTasks.count) Overdue")
                         .font(.caption)
-                        .foregroundColor(.green)
+                        .foregroundColor(.red)
                     Text("|")
                         .font(.caption)
                         .foregroundColor(.gray)
-                    Text("\(notCompletedTasks.count) Open")
+                    Text("\(incompleteTasks.count) Open")
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundColor(.orange)
+                    Text("|")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text("\(completedTasks.count) Completed")
+                        .font(.caption)
+                        .foregroundColor(.green)
                 }
             }
         }
