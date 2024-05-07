@@ -25,9 +25,9 @@ struct ProjectTasksListView: View {
     private var incompleteTasksRequest: FetchRequest<ProjectTask>
     private var completeTasksRequest: FetchRequest<ProjectTask>
 
-    var overdueTasks: FetchedResults<ProjectTask> { overdueTasksRequest.wrappedValue }
-    var incompleteTasks: FetchedResults<ProjectTask> { incompleteTasksRequest.wrappedValue }
-    var completeTasks: FetchedResults<ProjectTask> { completeTasksRequest.wrappedValue }
+    private var overdueTasks: FetchedResults<ProjectTask> { overdueTasksRequest.wrappedValue }
+    private var incompleteTasks: FetchedResults<ProjectTask> { incompleteTasksRequest.wrappedValue }
+    private var completeTasks: FetchedResults<ProjectTask> { completeTasksRequest.wrappedValue }
     
     var project: Project
 
@@ -36,17 +36,17 @@ struct ProjectTasksListView: View {
         self.overdueTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-            predicate: NSPredicate(format: "isCompleted == NO AND dateDue < %@ AND project == %@", Date().midnight as NSDate, project)
+            predicate: NSPredicate(format: "isCompleted == false AND dateDue < %@ AND project == %@", Date() as NSDate, project)
         )
         self.incompleteTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-            predicate: NSPredicate(format: "isCompleted == NO AND dateDue >= %@ AND dateDue < %@ AND project == %@", Date().midnight as NSDate, Date().tomorrow as NSDate, project)
+            predicate: NSPredicate(format: "isCompleted == false AND dateDue >= %@ AND project == %@", Date() as NSDate, project)
         )
         self.completeTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-            predicate: NSPredicate(format: "isCompleted == YES AND dateDue >= %@ AND dateDue < %@ AND project == %@", Date().midnight as NSDate, Date().tomorrow as NSDate, project)
+            predicate: NSPredicate(format: "isCompleted == true AND project == %@", project)
         )
     }
     
@@ -142,21 +142,27 @@ struct ProjectTasksListView: View {
         }
         
         List {
-            Section(header: Text("Overdue")) {
-                ForEach(sortedOverdueTasks, id: \.self) { task in
-                    TaskRowView(task: task)
+            if !sortedOverdueTasks.isEmpty {
+                Section(header: Text("Overdue")) {
+                    ForEach(sortedOverdueTasks, id: \.self) { task in
+                        TaskRowView(task: task)
+                    }
                 }
             }
             
-            Section(header: Text("To Do")) {
-                ForEach(sortedIncompletedTasks, id: \.self) { task in
-                    TaskRowView(task: task)
+            if !sortedIncompletedTasks.isEmpty {
+                Section(header: Text("To Do")) {
+                    ForEach(sortedIncompletedTasks, id: \.self) { task in
+                        TaskRowView(task: task)
+                    }
                 }
             }
 
-            Section(header: Text("Completed")) {
-                ForEach(sortedCompletedTasks, id: \.self) { task in
-                    TaskRowView(task: task)
+            if !sortedCompletedTasks.isEmpty {
+                Section(header: Text("Completed")) {
+                    ForEach(sortedCompletedTasks, id: \.self) { task in
+                        TaskRowView(task: task)
+                    }
                 }
             }
         }

@@ -15,14 +15,20 @@ struct ProjectsListView: View {
     var projects: FetchedResults<Project>
 
     var body: some View {
-        NavigationView {
-            List {
-                Text("Projects")
-                    .font(.largeTitle)
-                    .foregroundColor(.primary)
-                ForEach(projects, id: \.self) { project in
-                    NavigationLink(destination: ProjectTasksListView(project: project)) {
-                        ProjectRowView(project: project)
+        VStack {
+            Text(Constants.Titles.projectsTitle)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.horizontal)
+                .padding(.vertical)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white)
+            NavigationView {
+                List {
+                    ForEach(projects, id: \.self) { project in
+                        NavigationLink(destination: ProjectTasksListView(project: project)) {
+                            ProjectRowView(project: project)
+                        }
                     }
                 }
             }

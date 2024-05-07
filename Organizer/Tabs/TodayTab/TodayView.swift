@@ -18,19 +18,19 @@ struct TodayView: View {
     @FetchRequest(
         entity: ProjectTask.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-        predicate: NSPredicate(format: "isCompleted == NO AND dateDue < %@", Date().midnight as NSDate)
+        predicate: NSPredicate(format: "isCompleted == false AND dateDue < %@", Date() as NSDate)
     ) var overdueTasks: FetchedResults<ProjectTask>
 
     @FetchRequest(
         entity: ProjectTask.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-        predicate: NSPredicate(format: "isCompleted == NO AND dateDue >= %@ AND dateDue < %@", Date().midnight as NSDate, Date().tomorrow as NSDate)
+        predicate: NSPredicate(format: "isCompleted == false AND dateDue >= %@ AND dateDue < %@", Date() as NSDate, Date().tomorrow as NSDate)
     ) var incompleteTasks: FetchedResults<ProjectTask>
 
     @FetchRequest(
         entity: ProjectTask.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-        predicate: NSPredicate(format: "isCompleted == YES AND dateDue >= %@ AND dateDue < %@", Date().midnight as NSDate, Date().tomorrow as NSDate)
+        predicate: NSPredicate(format: "isCompleted == true AND dateDue >= %@ AND dateDue < %@", Date().midnight as NSDate, Date().tomorrow as NSDate)
     ) var completeTasks: FetchedResults<ProjectTask>
 
     var sortedOverdueTasks: [ProjectTask] {
@@ -134,21 +134,27 @@ struct TodayView: View {
             }
 
             List {
-                Section(header: Text("Overdue")) {
-                    ForEach(sortedOverdueTasks, id: \.self) { task in
-                        TaskRowView(task: task)
+                if !sortedOverdueTasks.isEmpty {
+                    Section(header: Text("Overdue")) {
+                        ForEach(sortedOverdueTasks, id: \.self) { task in
+                            TaskRowView(task: task)
+                        }
                     }
                 }
                 
-                Section(header: Text("Due Today")) {
-                    ForEach(sortedIncompletedTasks, id: \.self) { task in
-                        TaskRowView(task: task)
+                if !sortedIncompletedTasks.isEmpty {
+                    Section(header: Text("Due Today")) {
+                        ForEach(sortedIncompletedTasks, id: \.self) { task in
+                            TaskRowView(task: task)
+                        }
                     }
                 }
 
-                Section(header: Text("Completed")) {
-                    ForEach(sortedCompletedTasks, id: \.self) { task in
-                        TaskRowView(task: task)
+                if !sortedCompletedTasks.isEmpty {
+                    Section(header: Text("Completed")) {
+                        ForEach(sortedCompletedTasks, id: \.self) { task in
+                            TaskRowView(task: task)
+                        }
                     }
                 }
             }
