@@ -55,7 +55,7 @@ struct PersistenceController {
             taskEntity.isCompleted = Bool.random()
             taskEntity.priority = Int64(Constants.priorities.randomElement()?.level ?? 3)
             taskEntity.taskLabel = Constants.labels.randomElement()?.name
-            taskEntity.dateDue = Date().addingTimeInterval(TimeInterval.random(in: 0...64000))
+            taskEntity.dateDue = Date().addingTimeInterval(TimeInterval.random(in: -90000...64000))
             taskEntity.latitude = Double.random(in: -90...90)
             taskEntity.longitude = Double.random(in: -180...180)
 

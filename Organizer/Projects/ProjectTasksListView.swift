@@ -7,74 +7,147 @@
 
 import SwiftUI
 
+
+enum SortType {
+    case priorityAscending, priorityDescending
+    case titleAscending, titleDescending
+    case dueDateAscending, dueDateDescending
+}
+
 struct ProjectTasksListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @State private var currentSortType: SortType = .priorityDescending
+    @State private var isDueDateAscending: Bool = true
     @State private var isPriorityAscending: Bool = true
     @State private var isTitleAscending: Bool = true
-    var project: Project
     
+    private var overdueTasksRequest: FetchRequest<ProjectTask>
     private var incompleteTasksRequest: FetchRequest<ProjectTask>
     private var completeTasksRequest: FetchRequest<ProjectTask>
 
+    var overdueTasks: FetchedResults<ProjectTask> { overdueTasksRequest.wrappedValue }
     var incompleteTasks: FetchedResults<ProjectTask> { incompleteTasksRequest.wrappedValue }
     var completeTasks: FetchedResults<ProjectTask> { completeTasksRequest.wrappedValue }
+    
+    var project: Project
 
     init(project: Project) {
         self.project = project
+        self.overdueTasksRequest = FetchRequest<ProjectTask>(
+            entity: ProjectTask.entity(),
+            sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
+            predicate: NSPredicate(format: "isCompleted == NO AND dateDue < %@ AND project == %@", Date().midnight as NSDate, project)
+        )
         self.incompleteTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-            predicate: NSPredicate(format: "isCompleted == NO AND project == %@", project)
+            predicate: NSPredicate(format: "isCompleted == NO AND dateDue >= %@ AND dateDue < %@ AND project == %@", Date().midnight as NSDate, Date().tomorrow as NSDate, project)
         )
         self.completeTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
-            predicate: NSPredicate(format: "isCompleted == YES AND project == %@", project)
+            predicate: NSPredicate(format: "isCompleted == YES AND dateDue >= %@ AND dateDue < %@ AND project == %@", Date().midnight as NSDate, Date().tomorrow as NSDate, project)
         )
     }
     
-    var sortedCompletedTasks: [ProjectTask] {
-        completeTasks.sorted {
-            if $0.priority == $1.priority {
-                return isTitleAscending ? ($0.title ?? "") < ($1.title ?? "") : ($0.title ?? "") > ($1.title ?? "")
+    var sortedOverdueTasks: [ProjectTask] {
+        overdueTasks.sorted {
+            switch currentSortType {
+            case .priorityAscending:
+                return $0.priority < $1.priority
+            case .priorityDescending:
+                return $0.priority > $1.priority
+            case .titleAscending:
+                return ($0.title ?? "") < ($1.title ?? "")
+            case .titleDescending:
+                return ($0.title ?? "") > ($1.title ?? "")
+            case .dueDateAscending:
+                return ($0.dateDue ?? Date()) < ($1.dateDue ?? Date())
+            case .dueDateDescending:
+                return ($0.dateDue ?? Date()) > ($1.dateDue ?? Date())
             }
-            return isPriorityAscending ? $0.priority < $1.priority : $0.priority > $1.priority
-        }
-    }
-
-    var sortedIncompletedTasks: [ProjectTask] {
-        incompleteTasks.sorted {
-            if $0.priority == $1.priority {
-                return isTitleAscending ? ($0.title ?? "") < ($1.title ?? "") : ($0.title ?? "") > ($1.title ?? "")
-            }
-            return isPriorityAscending ? $0.priority < $1.priority : $0.priority > $1.priority
         }
     }
     
-    private func togglePrioritySort() {
-        isPriorityAscending.toggle()
+    var sortedIncompletedTasks: [ProjectTask] {
+        incompleteTasks.sorted {
+            switch currentSortType {
+            case .priorityAscending:
+                return $0.priority < $1.priority
+            case .priorityDescending:
+                return $0.priority > $1.priority
+            case .titleAscending:
+                return ($0.title ?? "") < ($1.title ?? "")
+            case .titleDescending:
+                return ($0.title ?? "") > ($1.title ?? "")
+            case .dueDateAscending:
+                return ($0.dateDue ?? Date()) < ($1.dateDue ?? Date())
+            case .dueDateDescending:
+                return ($0.dateDue ?? Date()) > ($1.dateDue ?? Date())
+            }
+        }
     }
 
-    private func toggleTitleSort() {
+    var sortedCompletedTasks: [ProjectTask] {
+        completeTasks.sorted {
+            switch currentSortType {
+            case .priorityAscending:
+                return $0.priority < $1.priority
+            case .priorityDescending:
+                return $0.priority > $1.priority
+            case .titleAscending:
+                return ($0.title ?? "") < ($1.title ?? "")
+            case .titleDescending:
+                return ($0.title ?? "") > ($1.title ?? "")
+            case .dueDateAscending:
+                return ($0.dateDue ?? Date()) < ($1.dateDue ?? Date())
+            case .dueDateDescending:
+                return ($0.dateDue ?? Date()) > ($1.dateDue ?? Date())
+            }
+        }
+    }
+    
+    func togglePrioritySort() {
+        isPriorityAscending.toggle()
+        currentSortType = currentSortType == .priorityAscending ? .priorityDescending : .priorityAscending
+    }
+
+    func toggleTitleSort() {
         isTitleAscending.toggle()
+        currentSortType = currentSortType == .titleAscending ? .titleDescending : .titleAscending
+    }
+
+    func toggleDueDateSort() {
+        isDueDateAscending.toggle()
+        currentSortType = currentSortType == .dueDateAscending ? .dueDateDescending : .dueDateAscending
     }
 
     var body: some View {
         HStack {
-            Spacer()
+            SortButton(
+                title: "Title",
+                isAscending: $isTitleAscending,
+                action: toggleTitleSort
+            )
             SortButton(
                 title: "Priority",
                 isAscending: $isPriorityAscending,
                 action: togglePrioritySort
             )
             SortButton(
-                title: "Title",
-                isAscending: $isTitleAscending,
-                action: toggleTitleSort
+                title: "Due Date",
+                isAscending: $isDueDateAscending,
+                action: toggleDueDateSort
             )
         }
         
         List {
+            Section(header: Text("Overdue")) {
+                ForEach(sortedOverdueTasks, id: \.self) { task in
+                    TaskRowView(task: task)
+                }
+            }
+            
             Section(header: Text("To Do")) {
                 ForEach(sortedIncompletedTasks, id: \.self) { task in
                     TaskRowView(task: task)
