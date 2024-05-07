@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct TodayView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var currentSortType: SortType = .priorityDescending
@@ -131,7 +132,7 @@ struct TodayView: View {
                     action: toggleDueDateSort
                 )
             }
-            
+
             List {
                 Section(header: Text("Overdue")) {
                     ForEach(sortedOverdueTasks, id: \.self) { task in
