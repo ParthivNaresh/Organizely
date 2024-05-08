@@ -4,6 +4,7 @@
 //
 //  Created by Parthiv Naresh on 5/3/24.
 //
+
 import SwiftUI
 import MapKit
 import MijickCalendarView
@@ -13,7 +14,7 @@ struct AddTaskView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var isVisible: Bool
     @FocusState private var isInputActive: Bool
-    var project: Project?
+    @Binding var selectedProject: Project?
     var task: ProjectTask?
     
     @State private var taskName: String = ""
@@ -32,6 +33,16 @@ struct AddTaskView: View {
     @State private var showingLocationPicker = false
     @State private var selectedLocation: CLLocationCoordinate2D? = nil
     @State private var selectedRange: MDateRange? = .init()
+    
+    init(
+        isVisible: Binding<Bool>,
+        selectedProject: Binding<Project?> = .constant(nil),
+        task: ProjectTask? = nil
+    ) {
+        self._isVisible = isVisible
+        self._selectedProject = selectedProject
+        self.task = task
+    }
     
     var body: some View {
         ScrollView {
@@ -148,7 +159,10 @@ struct AddTaskView: View {
         taskToSave.taskLabel = selectedLabel?.name
         taskToSave.latitude = selectedLocation?.latitude ?? 0
         taskToSave.longitude = selectedLocation?.longitude ?? 0
-        taskToSave.project = project
+        
+        if let existingProject = selectedProject {
+            taskToSave.project = selectedProject
+        }
 
         do {
             try viewContext.save()

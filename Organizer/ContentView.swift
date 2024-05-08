@@ -106,8 +106,7 @@ struct ContentView: View {
                 .padding(.bottom, 75)
             }
             .sheet(isPresented: $showingNewTaskSheet) {
-                AddTaskNoProjectView(isVisible: $showingNewTaskSheet)
-                    .focused($isInputActive)
+                AddTaskView(isVisible: $showingNewTaskSheet)
                     .presentationDetents(
                         [.fraction(0.2)],
                         selection: $settingsDetent
@@ -115,15 +114,13 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingNewProjectSheet) {
                 AddProjectView(isVisible: $showingNewProjectSheet)
-                    .focused($isInputActive)
                     .presentationDetents(
                         [.fraction(0.2)],
                         selection: $settingsDetent
                      )
             }
             .sheet(isPresented: $showingNewTaskInProjectSheet) {
-                AddTaskInProjectView(isVisible: $showingNewTaskInProjectSheet, selectedProject: $selectedProject)
-                    .focused($isInputActive)
+                AddTaskView(isVisible: $showingNewTaskInProjectSheet, selectedProject: $selectedProject)
                     .presentationDetents(
                         [.fraction(0.2)],
                         selection: $settingsDetent

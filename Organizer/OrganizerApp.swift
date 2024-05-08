@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import PartialSheet
 
 @main
 struct OrganizerApp: App {
