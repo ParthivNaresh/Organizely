@@ -37,7 +37,7 @@ struct PersistenceController {
         let context = container.viewContext
 
         var projects: [Project] = []
-        for _ in 0..<20 {
+        for _ in 0..<10 {
             let projectEntity = Project(context: context)
             projectEntity.title = "Project \((1...100).randomElement()!)"
             projectEntity.projectDescription = "Project description for this project with extra words \((1...100).randomElement()!)"
@@ -48,7 +48,7 @@ struct PersistenceController {
         }
 
         // Create tasks and associate them with projects
-        for _ in 0..<150 {
+        for _ in 0..<50 {
             let taskEntity = ProjectTask(context: context)
             taskEntity.title = "Task \((1...100).randomElement()!)"
             taskEntity.taskDescription = "Task description for this project with extra words \((1...100).randomElement()!)"

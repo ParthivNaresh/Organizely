@@ -1,20 +1,21 @@
 //
-//  AddTaskSheet.swift
+//  EditTaskInProjectView.swift
 //  Organizer
 //
-//  Created by Parthiv Naresh on 5/3/24.
+//  Created by Parthiv Naresh on 5/7/24.
 //
+
 import SwiftUI
 import MapKit
 import MijickCalendarView
 
 
-struct AddTaskView: View {
+struct EditTaskInProjectView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var isVisible: Bool
     @FocusState private var isInputActive: Bool
-    var project: Project?
-    var task: ProjectTask?
+    var project: Project
+    var task: ProjectTask
     
     @State private var taskName: String = ""
     @State private var taskDescription: String = ""
@@ -100,18 +101,16 @@ struct AddTaskView: View {
     }
     
     private func loadInitialData() {
-        if let task = task {
-            taskName = task.title ?? ""
-            taskDescription = task.taskDescription ?? ""
-            dateDue = task.dateDue
-            if let priorityLevel = Constants.priorities.first(where: { $0.level == Int(task.priority) }) {
-                selectedPriority = priorityLevel
-            }
-            if let labelName = task.taskLabel, let label = Constants.labels.first(where: { $0.name == labelName }) {
-                selectedLabel = label
-            }
-            selectedLocation = CLLocationCoordinate2D(latitude: task.latitude, longitude: task.longitude)
+        taskName = task.title ?? ""
+        taskDescription = task.taskDescription ?? ""
+        dateDue = task.dateDue
+        if let priorityLevel = Constants.priorities.first(where: { $0.level == Int(task.priority) }) {
+            selectedPriority = priorityLevel
         }
+        if let labelName = task.taskLabel, let label = Constants.labels.first(where: { $0.name == labelName }) {
+            selectedLabel = label
+        }
+        selectedLocation = CLLocationCoordinate2D(latitude: task.latitude, longitude: task.longitude)
     }
 
     private func closeAllOverlays() {
@@ -132,13 +131,9 @@ struct AddTaskView: View {
             return
         }
         let taskToSave: ProjectTask
-        if let existingTask = task {
-            taskToSave = existingTask
-        } else {
-            taskToSave = ProjectTask(context: viewContext)
-            taskToSave.dateCreated = Date()
-            taskToSave.isCompleted = false
-        }
+        taskToSave = ProjectTask(context: viewContext)
+        taskToSave.dateCreated = Date()
+        taskToSave.isCompleted = false
         
         taskToSave.title = taskName
         taskToSave.taskDescription = taskDescription
@@ -159,7 +154,7 @@ struct AddTaskView: View {
         }
         dismissSheet()
     }
-
+    
     private func dismissSheet() {
         isVisible = false
         isInputActive = false

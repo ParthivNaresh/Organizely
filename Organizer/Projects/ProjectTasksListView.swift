@@ -20,6 +20,7 @@ struct ProjectTasksListView: View {
     @State private var isDueDateAscending: Bool = true
     @State private var isPriorityAscending: Bool = true
     @State private var isTitleAscending: Bool = true
+    @Binding var selectedProject: Project?
     
     private var overdueTasksRequest: FetchRequest<ProjectTask>
     private var incompleteTasksRequest: FetchRequest<ProjectTask>
@@ -31,8 +32,9 @@ struct ProjectTasksListView: View {
     
     var project: Project
 
-    init(project: Project) {
+    init(project: Project, selectedProject: Binding<Project?>) {
         self.project = project
+        self._selectedProject = selectedProject
         self.overdueTasksRequest = FetchRequest<ProjectTask>(
             entity: ProjectTask.entity(),
             sortDescriptors: [NSSortDescriptor(keyPath: \ProjectTask.dateDue, ascending: true)],
@@ -145,7 +147,7 @@ struct ProjectTasksListView: View {
             if !sortedOverdueTasks.isEmpty {
                 Section(header: Text("Overdue")) {
                     ForEach(sortedOverdueTasks, id: \.self) { task in
-                        TaskRowView(task: task)
+                        TaskRowView(task: task, project: project)
                     }
                 }
             }
@@ -153,7 +155,7 @@ struct ProjectTasksListView: View {
             if !sortedIncompletedTasks.isEmpty {
                 Section(header: Text("To Do")) {
                     ForEach(sortedIncompletedTasks, id: \.self) { task in
-                        TaskRowView(task: task)
+                        TaskRowView(task: task, project: project)
                     }
                 }
             }
@@ -161,13 +163,19 @@ struct ProjectTasksListView: View {
             if !sortedCompletedTasks.isEmpty {
                 Section(header: Text("Completed")) {
                     ForEach(sortedCompletedTasks, id: \.self) { task in
-                        TaskRowView(task: task)
+                        TaskRowView(task: task, project: project)
                     }
                 }
             }
         }
         .padding(.top, 0)
         .listStyle(PlainListStyle())
+        .onAppear() {
+            self.selectedProject = project
+        }
+        .onDisappear() {
+            self.selectedProject = nil
+        }
     }
 
     private func addProjectTask() {

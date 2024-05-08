@@ -13,6 +13,7 @@ struct ProjectsListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(entity: Project.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Project.title, ascending: true)])
     var projects: FetchedResults<Project>
+    @Binding var selectedProject: Project?
 
     var body: some View {
         VStack {
@@ -26,7 +27,7 @@ struct ProjectsListView: View {
             NavigationView {
                 List {
                     ForEach(projects, id: \.self) { project in
-                        NavigationLink(destination: ProjectTasksListView(project: project)) {
+                        NavigationLink(destination: ProjectTasksListView(project: project, selectedProject: $selectedProject)) {
                             ProjectRowView(project: project)
                         }
                     }
