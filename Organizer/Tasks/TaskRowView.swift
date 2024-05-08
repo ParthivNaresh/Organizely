@@ -14,7 +14,7 @@ struct TaskRowView: View {
     @State private var settingsDetent = PresentationDetent.fraction(0.2)
     @State private var address: String = "Loading address..."
     @State private var isShowingDetails = false
-    
+
     var body: some View {
         HStack {
             Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
@@ -65,11 +65,19 @@ struct TaskRowView: View {
             self.isShowingDetails = true
         }
         .sheet(isPresented: $isShowingDetails) {
-            AddTaskView(isVisible: $isShowingDetails, project: project, task: task)
-                .presentationDetents(
-                    [.fraction(0.2)],
-                    selection: $settingsDetent
-                 )
+            if let project = project {
+                EditTaskInProjectView(isVisible: $isShowingDetails, project: project, task: task)
+                    .presentationDetents(
+                        [.fraction(0.2)],
+                        selection: $settingsDetent
+                    )
+            } else {
+                EditTaskNoProjectView(isVisible: $isShowingDetails, task: task)
+                    .presentationDetents(
+                        [.fraction(0.2)],
+                        selection: $settingsDetent
+                    )
+            }
         }
     }
     

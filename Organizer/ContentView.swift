@@ -17,7 +17,9 @@ struct ContentView: View {
     @State private var newProjectName = ""
     @State private var newTaskName = ""
     @State private var showingNewTaskSheet = false
+    @State private var showingNewTaskInProjectSheet = false
     @State private var showingNewProjectSheet = false
+    @State private var selectedProject: Project? = nil
     @FocusState private var isInputActive: Bool
     
     var projectTasksFetchRequest: FetchRequest<ProjectTask> {
@@ -50,7 +52,7 @@ struct ContentView: View {
                                 }
                             }
                             .tag(0)
-                        ProjectsListView()
+                        ProjectsListView(selectedProject: $selectedProject)
                             .tabItem {
                                 Label(Constants.Titles.projectsTitle, systemImage: "folder")
                             }
@@ -90,7 +92,11 @@ struct ContentView: View {
                     onAddTask: {
                         withAnimation(.easeInOut(duration: 0.7)) {
                             if selectedTab == 1 {
-                                showingNewProjectSheet = true
+                                if let _ = selectedProject {
+                                    showingNewTaskInProjectSheet = true
+                                } else {
+                                    showingNewProjectSheet = true
+                                }
                             } else {
                                 showingNewTaskSheet = true
                             }
@@ -100,7 +106,7 @@ struct ContentView: View {
                 .padding(.bottom, 75)
             }
             .sheet(isPresented: $showingNewTaskSheet) {
-                AddTaskView(isVisible: $showingNewTaskSheet)
+                AddTaskNoProjectView(isVisible: $showingNewTaskSheet)
                     .focused($isInputActive)
                     .presentationDetents(
                         [.fraction(0.2)],
@@ -109,6 +115,14 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingNewProjectSheet) {
                 AddProjectView(isVisible: $showingNewProjectSheet)
+                    .focused($isInputActive)
+                    .presentationDetents(
+                        [.fraction(0.2)],
+                        selection: $settingsDetent
+                     )
+            }
+            .sheet(isPresented: $showingNewTaskInProjectSheet) {
+                AddTaskInProjectView(isVisible: $showingNewTaskInProjectSheet, selectedProject: $selectedProject)
                     .focused($isInputActive)
                     .presentationDetents(
                         [.fraction(0.2)],

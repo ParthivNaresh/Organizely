@@ -23,6 +23,10 @@
 		C480A83D2BE5675D00B02160 /* SupportingAddProjectViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A83C2BE5675D00B02160 /* SupportingAddProjectViews.swift */; };
 		C480A8412BE6CBC500B02160 /* SupportingTabsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */; };
 		C480A8432BE6CC1400B02160 /* SupportingTodayTabViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */; };
+		C480A8452BEAE8EE00B02160 /* AddTaskInProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8442BEAE8EE00B02160 /* AddTaskInProjectView.swift */; };
+		C480A8472BEAE8FC00B02160 /* AddTaskNoProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8462BEAE8FC00B02160 /* AddTaskNoProjectView.swift */; };
+		C480A8492BEAE90C00B02160 /* EditTaskInProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8482BEAE90C00B02160 /* EditTaskInProjectView.swift */; };
+		C480A84B2BEAE91F00B02160 /* EditTaskNoProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A84A2BEAE91F00B02160 /* EditTaskNoProjectView.swift */; };
 		C4A341DD2BE3D44300A8CB5E /* SupportingLocationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */; };
 		C4DFF40C2BD4815300D36F7E /* OrganizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DFF40B2BD4815300D36F7E /* OrganizerApp.swift */; };
 		C4DFF40E2BD4815300D36F7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DFF40D2BD4815300D36F7E /* ContentView.swift */; };
@@ -71,6 +75,10 @@
 		C480A83C2BE5675D00B02160 /* SupportingAddProjectViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingAddProjectViews.swift; sourceTree = "<group>"; };
 		C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingTabsViews.swift; sourceTree = "<group>"; };
 		C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingTodayTabViews.swift; sourceTree = "<group>"; };
+		C480A8442BEAE8EE00B02160 /* AddTaskInProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskInProjectView.swift; sourceTree = "<group>"; };
+		C480A8462BEAE8FC00B02160 /* AddTaskNoProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskNoProjectView.swift; sourceTree = "<group>"; };
+		C480A8482BEAE90C00B02160 /* EditTaskInProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskInProjectView.swift; sourceTree = "<group>"; };
+		C480A84A2BEAE91F00B02160 /* EditTaskNoProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskNoProjectView.swift; sourceTree = "<group>"; };
 		C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingLocationPicker.swift; sourceTree = "<group>"; };
 		C4DFF4082BD4815300D36F7E /* Organizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Organizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4DFF40B2BD4815300D36F7E /* OrganizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerApp.swift; sourceTree = "<group>"; };
@@ -259,6 +267,10 @@
 				C4DFF4412BD575FC00D36F7E /* TaskRowView.swift */,
 				C480A8362BE5636A00B02160 /* TasksListView.swift */,
 				C480A8382BE563C700B02160 /* AddTaskView.swift */,
+				C480A8442BEAE8EE00B02160 /* AddTaskInProjectView.swift */,
+				C480A8462BEAE8FC00B02160 /* AddTaskNoProjectView.swift */,
+				C480A8482BEAE90C00B02160 /* EditTaskInProjectView.swift */,
+				C480A84A2BEAE91F00B02160 /* EditTaskNoProjectView.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -430,7 +442,9 @@
 				C4DFF4152BD4815400D36F7E /* Persistence.swift in Sources */,
 				C4DFF40E2BD4815300D36F7E /* ContentView.swift in Sources */,
 				C41D9F992BDB0FA3004B85D3 /* SupportingAddTaskViews.swift in Sources */,
+				C480A8452BEAE8EE00B02160 /* AddTaskInProjectView.swift in Sources */,
 				C44830832BDEB35100525CE6 /* DatePickerSheetView.swift in Sources */,
+				C480A8492BEAE90C00B02160 /* EditTaskInProjectView.swift in Sources */,
 				C4DFF40C2BD4815300D36F7E /* OrganizerApp.swift in Sources */,
 				C448308C2BE1AFE300525CE6 /* AddProjectView.swift in Sources */,
 				C4DFF44D2BD5A6DD00D36F7E /* TodayView.swift in Sources */,
@@ -440,9 +454,11 @@
 				C480A8372BE5636A00B02160 /* TasksListView.swift in Sources */,
 				C4DFF44A2BD5872900D36F7E /* ProjectTasksListView.swift in Sources */,
 				C480A8352BE5622B00B02160 /* IconViews.swift in Sources */,
+				C480A84B2BEAE91F00B02160 /* EditTaskNoProjectView.swift in Sources */,
 				C4DFF4182BD4815400D36F7E /* Organizer.xcdatamodeld in Sources */,
 				C44830892BDEB40A00525CE6 /* SupportingDatePickerSheet.swift in Sources */,
 				C4DFF4422BD575FC00D36F7E /* TaskRowView.swift in Sources */,
+				C480A8472BEAE8FC00B02160 /* AddTaskNoProjectView.swift in Sources */,
 				C480A83B2BE565B900B02160 /* ProjectsListView.swift in Sources */,
 				C480A8412BE6CBC500B02160 /* SupportingTabsViews.swift in Sources */,
 				C4A341DD2BE3D44300A8CB5E /* SupportingLocationPicker.swift in Sources */,
