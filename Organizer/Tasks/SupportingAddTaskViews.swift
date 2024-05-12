@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import MapKit
 import Combine
+import MijickCalendarView
 
 struct NewTaskTitleAndDescriptionView: View {
     @Binding var taskName: String
@@ -28,6 +30,29 @@ struct NewTaskTitleAndDescriptionView: View {
             .padding(EdgeInsets(top: 8, leading: 15, bottom: 8, trailing: 10))
             .background(Color.white)
             .cornerRadius(1)
+    }
+}
+
+struct NewSubtaskTitleAndDescriptionView: View {
+    @Binding var taskName: String
+    @Binding var taskDescription: String
+    @FocusState var isInputActive: Bool
+    @Binding var showError: Bool
+    
+    var body: some View{
+        VStack(spacing: 0) {
+            TextField("e.g. Take cat to the vet Friday at 3p.m.", text: $taskName)
+                .onReceive(Just(taskName)) { newValue in
+                    showError = newValue.isEmpty
+                }
+                .focused($isInputActive)
+                .padding(EdgeInsets(top: 8, leading: 15, bottom: 4, trailing: 0))
+                .font(.system(size: 18, weight: .semibold))
+            TextField("Task Description", text: $taskDescription)
+                .padding(EdgeInsets(top: 8, leading: 15, bottom: 8, trailing: 0))
+                .font(.system(size: 16, weight: .light))
+        }
+        .background(Color.clear)
     }
 }
 
@@ -309,6 +334,121 @@ struct NewTaskLocationButtonView: View {
     }
 }
 
+struct NewTaskAddSubTaskButtonView: View {
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: "plus")
+                    .imageScale(.small)
+                    .foregroundColor(.blue)
+                Text("Add Subtask")
+                    .fontWeight(.light)
+                    .font(.system(size: 16))
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 10)
+        }
+        .padding(.horizontal, 10)
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct SubtasksListView: View {
+    var subtasks: [ProjectSubtask]
+    
+    init(subtasks: [ProjectSubtask]) {
+        self.subtasks = subtasks
+        print("Loaded \(subtasks.count) subtasks")
+        if subtasks.count > 0 {
+            print("First title: \(String(describing: subtasks[0].title))")
+        }
+    }
+
+
+    var body: some View {
+        VStack {
+            List(subtasks, id: \.self) { subtask in
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(subtask.title ?? "Untitled")
+                            .font(.headline)
+                        Text(subtask.subtaskDescription ?? "No description")
+                            .font(.subheadline)
+                    }
+                }
+            }
+        }
+        .background(Color.blue)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct AddSubtaskView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @State private var showError: Bool = false
+    @State private var newSubtaskName: String = ""
+    @State private var newSubtaskDescription: String = ""
+    @Binding var showingAddSubTaskView: Bool
+    @FocusState private var isInputActive: Bool
+    var task: ProjectTask
+    @FetchRequest private var projectSubtasks: FetchedResults<ProjectSubtask>
+    
+    init(task: ProjectTask, showingAddSubTaskView: Binding<Bool>) {
+        self.task = task
+        self._showingAddSubTaskView = showingAddSubTaskView
+        _projectSubtasks = FetchRequest(
+            entity: ProjectSubtask.entity(),
+            sortDescriptors: [NSSortDescriptor(keyPath: \ProjectSubtask.title, ascending: true)]
+        )
+    }
+    
+    var body: some View {
+        HStack {
+            NewSubtaskTitleAndDescriptionView(
+                taskName: $newSubtaskName,
+                taskDescription: $newSubtaskDescription,
+                isInputActive: _isInputActive,
+                showError: $showError
+            )
+            Button(action: saveSubtask) {
+                if newSubtaskName.isEmpty {
+                    Image(systemName: "checkmark.circle")
+                        .foregroundColor(.green)
+                        .imageScale(.large)
+                }
+                else {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                        .imageScale(.large)
+                }
+            }
+            .padding(EdgeInsets(top: 8, leading: 0, bottom: 4, trailing: 10))
+            .disabled(newSubtaskName.isEmpty)
+        }
+    }
+    
+    private func saveSubtask() {
+        let newSubtask = ProjectSubtask(context: viewContext)
+        newSubtask.title = newSubtaskName
+        newSubtask.subtaskDescription = newSubtaskDescription
+        newSubtask.dateCreated = Date()
+        newSubtask.dateUpdated = Date()
+        newSubtask.isCompleted = false
+        newSubtask.task = task
+        
+        do {
+            try viewContext.save()
+            showingAddSubTaskView = false
+        } catch {
+            showError = true
+            print("Failed to save subtask: \(error)")
+        }
+    }
+}
+
+
 struct NewTaskAddTaskButtonView: View {
     var action: () -> Void
     var isEnabled: Bool
@@ -327,3 +467,53 @@ struct NewTaskAddTaskButtonView: View {
         }
     }
 }
+
+
+struct PrioritySelectionView: View {
+    @Binding var showPriorityList: Bool
+    @Binding var selectedPriority: Priority?
+
+    var body: some View {
+        Group {
+            if showPriorityList {
+                PrioritySelectionOverlay(showPriorityList: $showPriorityList, selectedPriority: $selectedPriority)
+                    .alignmentGuide(.top) { _ in 50 }
+            }
+        }
+    }
+}
+
+struct LabelSelectionOverlayView: View {
+    @Binding var showLabelList: Bool
+    @Binding var selectedLabel: TaskLabel?
+
+    var body: some View {
+        Group {
+            if showLabelList {
+                LabelSelectionOverlay(showLabelList: $showLabelList, selectedLabel: $selectedLabel)
+                    .alignmentGuide(.top) { _ in 50 }
+            }
+        }
+    }
+}
+
+struct DatePickerSheetContentView: View {
+    @Binding var dateDue: Date?
+    @Binding var showingDatePicker: Bool
+    @Binding var selectedRange: MDateRange?
+
+    var body: some View {
+        DatePickerSheetView(dateDue: $dateDue, showingDatePicker: $showingDatePicker, selectedRange: $selectedRange)
+    }
+}
+
+struct LocationPickerSheetContentView: View {
+    @Binding var showingLocationPicker: Bool
+    @Binding var selectedLocation: CLLocationCoordinate2D?
+
+    var body: some View {
+        LocationPickerSheetView(showingLocationPicker: $showingLocationPicker, selectedLocation: $selectedLocation)
+    }
+}
+
+

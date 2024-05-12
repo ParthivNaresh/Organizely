@@ -11,7 +11,6 @@ struct TaskRowView: View {
     @ObservedObject var task: ProjectTask
     @State var project: Project?
     @Environment(\.managedObjectContext) var viewContext
-    @State private var settingsDetent = PresentationDetent.fraction(0.2)
     @State private var address: String = "Loading address..."
     @State private var isShowingDetails = false
 
@@ -67,18 +66,10 @@ struct TaskRowView: View {
             self.isShowingDetails = true
         }
         .sheet(isPresented: $isShowingDetails) {
-            if let project = project {
+            if project != nil {
                 AddTaskView(isVisible: $isShowingDetails, selectedProject: $project, task: task)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                    )
             } else {
                 AddTaskView(isVisible: $isShowingDetails, task: task)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                    )
             }
         }
     }

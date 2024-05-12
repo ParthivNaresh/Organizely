@@ -33,6 +33,9 @@ struct AddTaskView: View {
     @State private var showingLocationPicker = false
     @State private var selectedLocation: CLLocationCoordinate2D? = nil
     @State private var selectedRange: MDateRange? = .init()
+    @State private var settingsDetent: PresentationDetent = .fraction(0.2)
+    @State var detents: Set<PresentationDetent> = [.fraction(0.2)]
+    @State private var showingAddSubTaskView: Bool = false
     
     init(
         isVisible: Binding<Bool>,
@@ -64,36 +67,59 @@ struct AddTaskView: View {
                     showingLocationPicker: $showingLocationPicker
                 )
                 Spacer()
-                NewTaskAddTaskButtonView(
-                    action: addTask,
-                    isEnabled: !taskName.isEmpty
-                )
+                HStack {
+                    NewTaskAddSubTaskButtonView(
+                        action: addSubTask
+                    )
+                    NewTaskAddTaskButtonView(
+                        action: addTask,
+                        isEnabled: !taskName.isEmpty
+                    )
+                }
+                Text("No subtasks before")
+                if showingAddSubTaskView {
+                    if let taskUnwrapped = task {
+                        AddSubtaskView(task: taskUnwrapped, showingAddSubTaskView: $showingAddSubTaskView)
+                    }
+                }
+                Text("No subtasks first")
+                
+                if let taskUnwrapped = task, let subtasksSet = taskUnwrapped.subtasks as? Set<ProjectSubtask> {
+                    SubtasksListView(subtasks: Array(subtasksSet))
+                } else {
+                    Text("No subtasks no task")
+                }
+                Text("No subtasks last")
             }
             .onAppear {
                 loadInitialData()
             }
+            .presentationDetents(
+                detents,
+                selection: $settingsDetent
+            )
+            .onChange(of: settingsDetent) {
+                if settingsDetent == .fraction(0.2) {
+                    detents = [.fraction(0.2)]
+                } else {
+                    detents = [.fraction(0.2), .fraction(0.4)]
+                }
+            }
             .overlay(
-                Group {
-                    if showPriorityList {
-                        PrioritySelectionOverlay(showPriorityList: $showPriorityList, selectedPriority: $selectedPriority)
-                            .alignmentGuide(.top) { _ in 50 }
-                    }
-                }, alignment: .topLeading
+                PrioritySelectionView(showPriorityList: $showPriorityList, selectedPriority: $selectedPriority), alignment: .topLeading
             )
             .overlay(
-                Group {
-                    if showLabelList {
-                        LabelSelectionOverlay(showLabelList: $showLabelList, selectedLabel: $selectedLabel)
-                            .alignmentGuide(.top) { _ in 50 }
-                    }
-                }, alignment: .topTrailing
+                LabelSelectionOverlayView(showLabelList: $showLabelList, selectedLabel: $selectedLabel), alignment: .topTrailing
             )
             .sheet(isPresented: $showingDatePicker) {
-                DatePickerSheetView(dateDue: $dateDue, showingDatePicker: $showingDatePicker, selectedRange: $selectedRange)
+                DatePickerSheetContentView(dateDue: $dateDue, showingDatePicker: $showingDatePicker, selectedRange: $selectedRange)
             }
             .sheet(isPresented: $showingLocationPicker) {
-                LocationPickerSheetView(showingLocationPicker: $showingLocationPicker, selectedLocation: $selectedLocation)
+                LocationPickerSheetContentView(showingLocationPicker: $showingLocationPicker, selectedLocation: $selectedLocation)
             }
+        }
+        .onAppear {
+            print("Task Loaded: \(task?.title ?? "No Title") with subtasks count: \(task?.subtasks?.count ?? 0)")
         }
         .onTapGesture {
             closeAllOverlays()
@@ -137,7 +163,12 @@ struct AddTaskView: View {
         formatter.dateFormat = "EEE"
         return formatter
     }()
-    
+
+    private func addSubTask() {
+        showingAddSubTaskView = true
+        settingsDetent = settingsDetent == .fraction(0.2) ? .fraction(0.4) : .fraction(0.2)
+    }
+
     private func addTask() {
         if taskName.isEmpty {
             return
@@ -159,9 +190,9 @@ struct AddTaskView: View {
         taskToSave.taskLabel = selectedLabel?.name
         taskToSave.latitude = selectedLocation?.latitude ?? 0
         taskToSave.longitude = selectedLocation?.longitude ?? 0
-        
+
         if let existingProject = selectedProject {
-            taskToSave.project = selectedProject
+            taskToSave.project = existingProject
         }
 
         do {

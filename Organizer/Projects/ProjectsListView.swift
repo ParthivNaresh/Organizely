@@ -11,7 +11,10 @@ import CoreData
 
 struct ProjectsListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(entity: Project.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Project.title, ascending: true)])
+    @FetchRequest(
+        entity: Project.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Project.title, ascending: true)]
+    )
     var projects: FetchedResults<Project>
     @Binding var selectedProject: Project?
 
