@@ -34,21 +34,21 @@ struct NewTaskTitleAndDescriptionView: View {
 }
 
 struct NewSubtaskTitleAndDescriptionView: View {
-    @Binding var taskName: String
-    @Binding var taskDescription: String
+    @Binding var subtaskName: String
+    @Binding var subtaskDescription: String
     @FocusState var isInputActive: Bool
     @Binding var showError: Bool
     
     var body: some View{
         VStack(spacing: 0) {
-            TextField("e.g. Take cat to the vet Friday at 3p.m.", text: $taskName)
-                .onReceive(Just(taskName)) { newValue in
+            TextField("e.g. Take cat to the vet Friday at 3p.m.", text: $subtaskName)
+                .onReceive(Just(subtaskName)) { newValue in
                     showError = newValue.isEmpty
                 }
                 .focused($isInputActive)
                 .padding(EdgeInsets(top: 8, leading: 15, bottom: 4, trailing: 0))
                 .font(.system(size: 18, weight: .semibold))
-            TextField("Task Description", text: $taskDescription)
+            TextField("Subtask Description", text: $subtaskDescription)
                 .padding(EdgeInsets(top: 8, leading: 15, bottom: 8, trailing: 0))
                 .font(.system(size: 16, weight: .light))
         }
@@ -57,6 +57,38 @@ struct NewSubtaskTitleAndDescriptionView: View {
 }
 
 struct TaskControlButtonsView: View {
+    @Binding var showPriorityList: Bool
+    @Binding var selectedPriority: Priority?
+    @Binding var showDatePicker: Bool
+    @Binding var dateDue: Date?
+    @Binding var showLabelList: Bool
+    @Binding var selectedLabel: TaskLabel?
+    @Binding var showingLocationPicker: Bool
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                NewTaskTodayButtonView(
+                    showDatePicker: $showDatePicker,
+                    dateDue: $dateDue
+                )
+                NewTaskPriorityButtonView(
+                    showPriorityList: $showPriorityList,
+                    selectedPriority: $selectedPriority
+                )
+                NewTaskReminderButtonView()
+                NewTaskLabelsButtonView(
+                    showLabelList: $showLabelList,
+                    selectedLabel: $selectedLabel
+                )
+                NewTaskLocationButtonView(showingLocationPicker: $showingLocationPicker)
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+}
+
+struct SubtaskControlButtonsView: View {
     @Binding var showPriorityList: Bool
     @Binding var selectedPriority: Priority?
     @Binding var showDatePicker: Bool
@@ -334,7 +366,26 @@ struct NewTaskLocationButtonView: View {
     }
 }
 
-struct NewTaskAddSubTaskButtonView: View {
+struct NewSubtaskSubmitSubtaskButtonView: View {
+    var action: () -> Void
+    var isEnabled: Bool
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: action) {
+                Image(systemName: "arrow.up.circle.fill")
+                    .resizable()
+                    .frame(width: 35, height: 35)
+                    .foregroundColor(isEnabled ? .blue : .gray)
+            }
+            .disabled(!isEnabled)
+            .padding(.trailing, 20)
+        }
+    }
+}
+
+struct NewSubtaskAddSubtaskButtonView: View {
     var action: () -> Void
 
     var body: some View {
@@ -356,100 +407,79 @@ struct NewTaskAddSubTaskButtonView: View {
 }
 
 struct SubtasksListView: View {
-    var subtasks: [ProjectSubtask]
-    
-    init(subtasks: [ProjectSubtask]) {
-        self.subtasks = subtasks
-        print("Loaded \(subtasks.count) subtasks")
-        if subtasks.count > 0 {
-            print("First title: \(String(describing: subtasks[0].title))")
-        }
-    }
-
-
-    var body: some View {
-        VStack {
-            List(subtasks, id: \.self) { subtask in
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(subtask.title ?? "Untitled")
-                            .font(.headline)
-                        Text(subtask.subtaskDescription ?? "No description")
-                            .font(.subheadline)
-                    }
-                }
-            }
-        }
-        .background(Color.blue)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct AddSubtaskView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @State private var showError: Bool = false
-    @State private var newSubtaskName: String = ""
-    @State private var newSubtaskDescription: String = ""
-    @Binding var showingAddSubTaskView: Bool
-    @FocusState private var isInputActive: Bool
     var task: ProjectTask
     @FetchRequest private var projectSubtasks: FetchedResults<ProjectSubtask>
     
-    init(task: ProjectTask, showingAddSubTaskView: Binding<Bool>) {
+    init(task: ProjectTask) {
         self.task = task
-        self._showingAddSubTaskView = showingAddSubTaskView
         _projectSubtasks = FetchRequest(
             entity: ProjectSubtask.entity(),
-            sortDescriptors: [NSSortDescriptor(keyPath: \ProjectSubtask.title, ascending: true)]
+            sortDescriptors: [NSSortDescriptor(keyPath: \ProjectSubtask.title, ascending: true)],
+            predicate: NSPredicate(format: "task == %@", task)
         )
     }
-    
+
     var body: some View {
-        HStack {
-            NewSubtaskTitleAndDescriptionView(
-                taskName: $newSubtaskName,
-                taskDescription: $newSubtaskDescription,
-                isInputActive: _isInputActive,
-                showError: $showError
-            )
-            Button(action: saveSubtask) {
-                if newSubtaskName.isEmpty {
-                    Image(systemName: "checkmark.circle")
-                        .foregroundColor(.green)
-                        .imageScale(.large)
-                }
-                else {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                        .imageScale(.large)
+        VStack {
+            List{
+                ForEach(projectSubtasks, id: \.self) { subtask in
+                    SubtaskRowView(subtask: subtask)
                 }
             }
-            .padding(EdgeInsets(top: 8, leading: 0, bottom: 4, trailing: 10))
-            .disabled(newSubtaskName.isEmpty)
-        }
-    }
-    
-    private func saveSubtask() {
-        let newSubtask = ProjectSubtask(context: viewContext)
-        newSubtask.title = newSubtaskName
-        newSubtask.subtaskDescription = newSubtaskDescription
-        newSubtask.dateCreated = Date()
-        newSubtask.dateUpdated = Date()
-        newSubtask.isCompleted = false
-        newSubtask.task = task
-        
-        do {
-            try viewContext.save()
-            showingAddSubTaskView = false
-        } catch {
-            showError = true
-            print("Failed to save subtask: \(error)")
         }
     }
 }
 
+struct SubtaskRowView: View {
+    @Environment(\.managedObjectContext) var viewContext
+    @ObservedObject var subtask: ProjectSubtask
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(subtask.title ?? "Untitled")
+                    .font(.headline)
+                Text(subtask.subtaskDescription ?? "No description")
+                    .font(.subheadline)
+            }
+            Spacer()
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Priority: ")
+                        .foregroundColor(.black)
+                    Text(getPriorityLevel(fromLevel: subtask.priority))
+                        .foregroundColor(priorityColor(for: subtask.priority))
+                }
+                .font(.caption)
+                HStack {
+                    Text("Label: ")
+                        .foregroundColor(.black)
+                    Text(getTaskLabel(fromLabel: subtask.taskLabel ?? "Misc"))
+                        .foregroundColor(labelColor(for: subtask.taskLabel))
+                }
+                .font(.caption)
+            }
+        }
+    }
+    
+    private func getPriorityLevel(fromLevel level: Int64) -> String {
+        return Constants.priorities.first { $0.level == Int(level) }?.name ?? "Medium"
+    }
+    
+    private func getTaskLabel(fromLabel taskLabel: String) -> String {
+        return Constants.labels.first { $0.name == taskLabel }?.name ?? "Misc"
+    }
+    
+    private func priorityColor(for priority: Int64) -> Color {
+        return Constants.priorities.first { $0.level == Int(priority) }?.color ?? .black
+    }
+    
+    private func labelColor(for taskLabel: String?) -> Color {
+        return Constants.labels.first { $0.name == taskLabel }?.color ?? .black
+    }
+}
 
-struct NewTaskAddTaskButtonView: View {
+struct NewTaskSubmitTaskButtonView: View {
     var action: () -> Void
     var isEnabled: Bool
 

@@ -15,14 +15,14 @@ struct AddTaskView: View {
     @Binding var isVisible: Bool
     @FocusState private var isInputActive: Bool
     @Binding var selectedProject: Project?
-    var task: ProjectTask?
-    
+    @State private var task: ProjectTask?
+    var isSubtask: Bool
+
     @State private var taskName: String = ""
     @State private var taskDescription: String = ""
     @State private var dateDue: Date? = Date()
     @State private var categories: [String] = []
     @State private var selectedCategory: String?
-    @State private var keyboardHeight: CGFloat = 0
     @State private var selectedPriority: Priority? = nil
     @State private var showPriorityList = false
     @State private var selectedLabel: TaskLabel? = nil
@@ -34,92 +34,103 @@ struct AddTaskView: View {
     @State private var selectedLocation: CLLocationCoordinate2D? = nil
     @State private var selectedRange: MDateRange? = .init()
     @State private var settingsDetent: PresentationDetent = .fraction(0.2)
+    @State private var taskSubtasks: Set<ProjectSubtask> = []
     @State var detents: Set<PresentationDetent> = [.fraction(0.2)]
     @State private var showingAddSubTaskView: Bool = false
+    @State private var isShowingSubtaskDetails = false
     
+    @FetchRequest var projectSubtasks: FetchedResults<ProjectSubtask>
+
     init(
         isVisible: Binding<Bool>,
         selectedProject: Binding<Project?> = .constant(nil),
-        task: ProjectTask? = nil
+        task: ProjectTask? = nil,
+        isSubtask: Bool = false
     ) {
         self._isVisible = isVisible
         self._selectedProject = selectedProject
         self.task = task
+        self.isSubtask = isSubtask
+        
+        if let task = task {
+            self._projectSubtasks = FetchRequest<ProjectSubtask>(
+                sortDescriptors: [NSSortDescriptor(keyPath: \ProjectSubtask.title, ascending: true)],
+                predicate: NSPredicate(format: "task == %@", task)
+            )
+        } else {
+            self._projectSubtasks = FetchRequest<ProjectSubtask>(
+                sortDescriptors: [NSSortDescriptor(keyPath: \ProjectSubtask.title, ascending: true)]
+            )
+        }
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                NewTaskTitleAndDescriptionView(
-                    taskName: $taskName,
-                    taskDescription: $taskDescription,
-                    isInputActive: _isInputActive,
-                    showError: $showError
+        VStack(spacing: 0) {
+            NewTaskTitleAndDescriptionView(
+                taskName: $taskName,
+                taskDescription: $taskDescription,
+                isInputActive: _isInputActive,
+                showError: $showError
+            )
+            Spacer()
+            TaskControlButtonsView(
+                showPriorityList: $showPriorityList,
+                selectedPriority: $selectedPriority,
+                showDatePicker: $showingDatePicker,
+                dateDue: $dateDue,
+                showLabelList: $showLabelList,
+                selectedLabel: $selectedLabel,
+                showingLocationPicker: $showingLocationPicker
+            )
+            Spacer()
+            HStack {
+                NewSubtaskAddSubtaskButtonView(
+                    action: toggleAddSubTask
                 )
-                Spacer()
-                TaskControlButtonsView(
-                    showPriorityList: $showPriorityList,
-                    selectedPriority: $selectedPriority,
-                    showDatePicker: $showingDatePicker,
-                    dateDue: $dateDue,
-                    showLabelList: $showLabelList,
-                    selectedLabel: $selectedLabel,
-                    showingLocationPicker: $showingLocationPicker
+                NewTaskSubmitTaskButtonView(
+                    action: addTask,
+                    isEnabled: !taskName.isEmpty
                 )
-                Spacer()
-                HStack {
-                    NewTaskAddSubTaskButtonView(
-                        action: addSubTask
-                    )
-                    NewTaskAddTaskButtonView(
-                        action: addTask,
-                        isEnabled: !taskName.isEmpty
-                    )
-                }
-                Text("No subtasks before")
-                if showingAddSubTaskView {
-                    if let taskUnwrapped = task {
-                        AddSubtaskView(task: taskUnwrapped, showingAddSubTaskView: $showingAddSubTaskView)
-                    }
-                }
-                Text("No subtasks first")
-                
-                if let taskUnwrapped = task, let subtasksSet = taskUnwrapped.subtasks as? Set<ProjectSubtask> {
-                    SubtasksListView(subtasks: Array(subtasksSet))
-                } else {
-                    Text("No subtasks no task")
-                }
-                Text("No subtasks last")
             }
-            .onAppear {
-                loadInitialData()
-            }
-            .presentationDetents(
-                detents,
-                selection: $settingsDetent
-            )
-            .onChange(of: settingsDetent) {
-                if settingsDetent == .fraction(0.2) {
-                    detents = [.fraction(0.2)]
-                } else {
-                    detents = [.fraction(0.2), .fraction(0.4)]
-                }
-            }
-            .overlay(
-                PrioritySelectionView(showPriorityList: $showPriorityList, selectedPriority: $selectedPriority), alignment: .topLeading
-            )
-            .overlay(
-                LabelSelectionOverlayView(showLabelList: $showLabelList, selectedLabel: $selectedLabel), alignment: .topTrailing
-            )
-            .sheet(isPresented: $showingDatePicker) {
-                DatePickerSheetContentView(dateDue: $dateDue, showingDatePicker: $showingDatePicker, selectedRange: $selectedRange)
-            }
-            .sheet(isPresented: $showingLocationPicker) {
-                LocationPickerSheetContentView(showingLocationPicker: $showingLocationPicker, selectedLocation: $selectedLocation)
+
+            if let taskUnwrapped = task {
+                SubtasksListView(task: taskUnwrapped)
             }
         }
         .onAppear {
-            print("Task Loaded: \(task?.title ?? "No Title") with subtasks count: \(task?.subtasks?.count ?? 0)")
+            loadInitialData()
+        }
+        .presentationDetents(
+            detents,
+            selection: $settingsDetent
+        )
+        .onChange(of: settingsDetent) {
+            if settingsDetent == .fraction(0.2) {
+                detents = [.fraction(0.2)]
+            } else {
+                detents = [.fraction(0.2), .fraction(0.3)]
+            }
+        }
+        .overlay(
+            PrioritySelectionView(showPriorityList: $showPriorityList, selectedPriority: $selectedPriority), alignment: .topLeading
+        )
+        .overlay(
+            LabelSelectionOverlayView(showLabelList: $showLabelList, selectedLabel: $selectedLabel), alignment: .topTrailing
+        )
+        .sheet(isPresented: $showingDatePicker) {
+            DatePickerSheetContentView(dateDue: $dateDue, showingDatePicker: $showingDatePicker, selectedRange: $selectedRange)
+        }
+        .sheet(isPresented: $showingLocationPicker) {
+            LocationPickerSheetContentView(showingLocationPicker: $showingLocationPicker, selectedLocation: $selectedLocation)
+        }
+        .sheet(isPresented: $showingAddSubTaskView) {
+            if let _ = task {
+                AddSubtaskView(isVisible: $showingAddSubTaskView, selectedTask: $task)
+                    .presentationDetents(
+                        detents,
+                        selection: $settingsDetent
+                    )
+            }
         }
         .onTapGesture {
             closeAllOverlays()
@@ -135,7 +146,7 @@ struct AddTaskView: View {
             NotificationCenter.default.removeObserver(self)
         }
     }
-    
+
     private func loadInitialData() {
         if let task = task {
             taskName = task.title ?? ""
@@ -148,6 +159,9 @@ struct AddTaskView: View {
                 selectedLabel = label
             }
             selectedLocation = CLLocationCoordinate2D(latitude: task.latitude, longitude: task.longitude)
+        }
+        if let subtasksSet = task?.subtasks as? Set<ProjectSubtask> {
+            taskSubtasks = subtasksSet
         }
     }
 
@@ -164,9 +178,9 @@ struct AddTaskView: View {
         return formatter
     }()
 
-    private func addSubTask() {
-        showingAddSubTaskView = true
-        settingsDetent = settingsDetent == .fraction(0.2) ? .fraction(0.4) : .fraction(0.2)
+    private func toggleAddSubTask() {
+        showingAddSubTaskView.toggle()
+        settingsDetent = settingsDetent == .fraction(0.2) ? .fraction(0.3) : .fraction(0.3)
     }
 
     private func addTask() {
@@ -190,6 +204,9 @@ struct AddTaskView: View {
         taskToSave.taskLabel = selectedLabel?.name
         taskToSave.latitude = selectedLocation?.latitude ?? 0
         taskToSave.longitude = selectedLocation?.longitude ?? 0
+        if let subtasksSet = taskSubtasks as NSSet? {
+            taskToSave.subtasks = subtasksSet
+        }
 
         if let existingProject = selectedProject {
             taskToSave.project = existingProject
@@ -197,7 +214,6 @@ struct AddTaskView: View {
 
         do {
             try viewContext.save()
-            print("Task saved successfully")
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

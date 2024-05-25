@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C41D9F992BDB0FA3004B85D3 /* SupportingAddTaskViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41D9F982BDB0FA3004B85D3 /* SupportingAddTaskViews.swift */; };
+		C42E3DD12BF2D27700C4AEF3 /* AddSubtaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E3DD02BF2D27700C4AEF3 /* AddSubtaskView.swift */; };
 		C44830832BDEB35100525CE6 /* DatePickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */; };
 		C44830862BDEB3A700525CE6 /* LocationPickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */; };
 		C44830892BDEB40A00525CE6 /* SupportingDatePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */; };
@@ -57,6 +58,7 @@
 
 /* Begin PBXFileReference section */
 		C41D9F982BDB0FA3004B85D3 /* SupportingAddTaskViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingAddTaskViews.swift; sourceTree = "<group>"; };
+		C42E3DD02BF2D27700C4AEF3 /* AddSubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubtaskView.swift; sourceTree = "<group>"; };
 		C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetView.swift; sourceTree = "<group>"; };
 		C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerSheetView.swift; sourceTree = "<group>"; };
 		C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingDatePickerSheet.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 				C4DFF4412BD575FC00D36F7E /* TaskRowView.swift */,
 				C480A8362BE5636A00B02160 /* TasksListView.swift */,
 				C480A8382BE563C700B02160 /* AddTaskView.swift */,
+				C42E3DD02BF2D27700C4AEF3 /* AddSubtaskView.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 			files = (
 				C480A8432BE6CC1400B02160 /* SupportingTodayTabViews.swift in Sources */,
 				C4DFF4442BD5764100D36F7E /* ProjectRowView.swift in Sources */,
+				C42E3DD12BF2D27700C4AEF3 /* AddSubtaskView.swift in Sources */,
 				C480A8392BE563C700B02160 /* AddTaskView.swift in Sources */,
 				C4DFF4152BD4815400D36F7E /* Persistence.swift in Sources */,
 				C4DFF40E2BD4815300D36F7E /* ContentView.swift in Sources */,

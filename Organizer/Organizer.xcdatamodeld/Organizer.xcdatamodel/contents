@@ -16,6 +16,8 @@
         <attribute name="dateDue" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="dateUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isCompleted" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="priority" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="subtaskDescription" optional="YES" attributeType="String"/>
         <attribute name="taskLabel" optional="YES" attributeType="String"/>
