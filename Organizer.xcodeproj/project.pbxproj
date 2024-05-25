@@ -8,14 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		C41D9F992BDB0FA3004B85D3 /* SupportingAddTaskViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41D9F982BDB0FA3004B85D3 /* SupportingAddTaskViews.swift */; };
-		C44210EC2BDDA5B3009154B1 /* MijickNavigattie in Frameworks */ = {isa = PBXBuildFile; productRef = C44210EB2BDDA5B3009154B1 /* MijickNavigattie */; };
-		C44210EF2BDDA88F009154B1 /* MijickCalendarView in Frameworks */ = {isa = PBXBuildFile; productRef = C44210EE2BDDA88F009154B1 /* MijickCalendarView */; };
+		C42E3DD12BF2D27700C4AEF3 /* AddSubtaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42E3DD02BF2D27700C4AEF3 /* AddSubtaskView.swift */; };
 		C44830832BDEB35100525CE6 /* DatePickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */; };
 		C44830862BDEB3A700525CE6 /* LocationPickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */; };
 		C44830892BDEB40A00525CE6 /* SupportingDatePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */; };
 		C448308C2BE1AFE300525CE6 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C448308B2BE1AFE300525CE6 /* AddProjectView.swift */; };
-		C480A8302BE45DD200B02160 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = C480A82F2BE45DD200B02160 /* PartialSheet */; };
-		C480A8322BE460D000B02160 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8312BE460D000B02160 /* Example.swift */; };
 		C480A8352BE5622B00B02160 /* IconViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8342BE5622B00B02160 /* IconViews.swift */; };
 		C480A8372BE5636A00B02160 /* TasksListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8362BE5636A00B02160 /* TasksListView.swift */; };
 		C480A8392BE563C700B02160 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8382BE563C700B02160 /* AddTaskView.swift */; };
@@ -23,10 +20,8 @@
 		C480A83D2BE5675D00B02160 /* SupportingAddProjectViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A83C2BE5675D00B02160 /* SupportingAddProjectViews.swift */; };
 		C480A8412BE6CBC500B02160 /* SupportingTabsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */; };
 		C480A8432BE6CC1400B02160 /* SupportingTodayTabViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */; };
-		C480A8452BEAE8EE00B02160 /* AddTaskInProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8442BEAE8EE00B02160 /* AddTaskInProjectView.swift */; };
-		C480A8472BEAE8FC00B02160 /* AddTaskNoProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8462BEAE8FC00B02160 /* AddTaskNoProjectView.swift */; };
-		C480A8492BEAE90C00B02160 /* EditTaskInProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A8482BEAE90C00B02160 /* EditTaskInProjectView.swift */; };
-		C480A84B2BEAE91F00B02160 /* EditTaskNoProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480A84A2BEAE91F00B02160 /* EditTaskNoProjectView.swift */; };
+		C480A84D2BEBEBAA00B02160 /* MijickCalendarView in Frameworks */ = {isa = PBXBuildFile; productRef = C480A84C2BEBEBAA00B02160 /* MijickCalendarView */; };
+		C480A84F2BEBEBB300B02160 /* MijickNavigattie in Frameworks */ = {isa = PBXBuildFile; productRef = C480A84E2BEBEBB300B02160 /* MijickNavigattie */; };
 		C4A341DD2BE3D44300A8CB5E /* SupportingLocationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */; };
 		C4DFF40C2BD4815300D36F7E /* OrganizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DFF40B2BD4815300D36F7E /* OrganizerApp.swift */; };
 		C4DFF40E2BD4815300D36F7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DFF40D2BD4815300D36F7E /* ContentView.swift */; };
@@ -63,11 +58,11 @@
 
 /* Begin PBXFileReference section */
 		C41D9F982BDB0FA3004B85D3 /* SupportingAddTaskViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingAddTaskViews.swift; sourceTree = "<group>"; };
+		C42E3DD02BF2D27700C4AEF3 /* AddSubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubtaskView.swift; sourceTree = "<group>"; };
 		C44830822BDEB35100525CE6 /* DatePickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSheetView.swift; sourceTree = "<group>"; };
 		C44830852BDEB3A700525CE6 /* LocationPickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerSheetView.swift; sourceTree = "<group>"; };
 		C44830882BDEB40A00525CE6 /* SupportingDatePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingDatePickerSheet.swift; sourceTree = "<group>"; };
 		C448308B2BE1AFE300525CE6 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
-		C480A8312BE460D000B02160 /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
 		C480A8342BE5622B00B02160 /* IconViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconViews.swift; sourceTree = "<group>"; };
 		C480A8362BE5636A00B02160 /* TasksListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListView.swift; sourceTree = "<group>"; };
 		C480A8382BE563C700B02160 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
@@ -75,10 +70,6 @@
 		C480A83C2BE5675D00B02160 /* SupportingAddProjectViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingAddProjectViews.swift; sourceTree = "<group>"; };
 		C480A8402BE6CBC500B02160 /* SupportingTabsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingTabsViews.swift; sourceTree = "<group>"; };
 		C480A8422BE6CC1400B02160 /* SupportingTodayTabViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingTodayTabViews.swift; sourceTree = "<group>"; };
-		C480A8442BEAE8EE00B02160 /* AddTaskInProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskInProjectView.swift; sourceTree = "<group>"; };
-		C480A8462BEAE8FC00B02160 /* AddTaskNoProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskNoProjectView.swift; sourceTree = "<group>"; };
-		C480A8482BEAE90C00B02160 /* EditTaskInProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskInProjectView.swift; sourceTree = "<group>"; };
-		C480A84A2BEAE91F00B02160 /* EditTaskNoProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTaskNoProjectView.swift; sourceTree = "<group>"; };
 		C4A341DC2BE3D44300A8CB5E /* SupportingLocationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingLocationPicker.swift; sourceTree = "<group>"; };
 		C4DFF4082BD4815300D36F7E /* Organizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Organizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4DFF40B2BD4815300D36F7E /* OrganizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizerApp.swift; sourceTree = "<group>"; };
@@ -104,9 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C480A8302BE45DD200B02160 /* PartialSheet in Frameworks */,
-				C44210EF2BDDA88F009154B1 /* MijickCalendarView in Frameworks */,
-				C44210EC2BDDA5B3009154B1 /* MijickNavigattie in Frameworks */,
+				C480A84D2BEBEBAA00B02160 /* MijickCalendarView in Frameworks */,
+				C480A84F2BEBEBB300B02160 /* MijickNavigattie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,7 +212,6 @@
 				C4DFF4162BD4815400D36F7E /* Organizer.xcdatamodeld */,
 				C4DFF4112BD4815400D36F7E /* Preview Content */,
 				C4DFF4452BD577AB00D36F7E /* Constants.swift */,
-				C480A8312BE460D000B02160 /* Example.swift */,
 			);
 			path = Organizer;
 			sourceTree = "<group>";
@@ -267,10 +256,7 @@
 				C4DFF4412BD575FC00D36F7E /* TaskRowView.swift */,
 				C480A8362BE5636A00B02160 /* TasksListView.swift */,
 				C480A8382BE563C700B02160 /* AddTaskView.swift */,
-				C480A8442BEAE8EE00B02160 /* AddTaskInProjectView.swift */,
-				C480A8462BEAE8FC00B02160 /* AddTaskNoProjectView.swift */,
-				C480A8482BEAE90C00B02160 /* EditTaskInProjectView.swift */,
-				C480A84A2BEAE91F00B02160 /* EditTaskNoProjectView.swift */,
+				C42E3DD02BF2D27700C4AEF3 /* AddSubtaskView.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -313,9 +299,8 @@
 			);
 			name = Organizer;
 			packageProductDependencies = (
-				C44210EB2BDDA5B3009154B1 /* MijickNavigattie */,
-				C44210EE2BDDA88F009154B1 /* MijickCalendarView */,
-				C480A82F2BE45DD200B02160 /* PartialSheet */,
+				C480A84C2BEBEBAA00B02160 /* MijickCalendarView */,
+				C480A84E2BEBEBB300B02160 /* MijickNavigattie */,
 			);
 			productName = Organizer;
 			productReference = C4DFF4082BD4815300D36F7E /* Organizer.app */;
@@ -438,27 +423,23 @@
 			files = (
 				C480A8432BE6CC1400B02160 /* SupportingTodayTabViews.swift in Sources */,
 				C4DFF4442BD5764100D36F7E /* ProjectRowView.swift in Sources */,
+				C42E3DD12BF2D27700C4AEF3 /* AddSubtaskView.swift in Sources */,
 				C480A8392BE563C700B02160 /* AddTaskView.swift in Sources */,
 				C4DFF4152BD4815400D36F7E /* Persistence.swift in Sources */,
 				C4DFF40E2BD4815300D36F7E /* ContentView.swift in Sources */,
 				C41D9F992BDB0FA3004B85D3 /* SupportingAddTaskViews.swift in Sources */,
-				C480A8452BEAE8EE00B02160 /* AddTaskInProjectView.swift in Sources */,
 				C44830832BDEB35100525CE6 /* DatePickerSheetView.swift in Sources */,
-				C480A8492BEAE90C00B02160 /* EditTaskInProjectView.swift in Sources */,
 				C4DFF40C2BD4815300D36F7E /* OrganizerApp.swift in Sources */,
 				C448308C2BE1AFE300525CE6 /* AddProjectView.swift in Sources */,
 				C4DFF44D2BD5A6DD00D36F7E /* TodayView.swift in Sources */,
-				C480A8322BE460D000B02160 /* Example.swift in Sources */,
 				C44830862BDEB3A700525CE6 /* LocationPickerSheetView.swift in Sources */,
 				C4DFF4462BD577AB00D36F7E /* Constants.swift in Sources */,
 				C480A8372BE5636A00B02160 /* TasksListView.swift in Sources */,
 				C4DFF44A2BD5872900D36F7E /* ProjectTasksListView.swift in Sources */,
 				C480A8352BE5622B00B02160 /* IconViews.swift in Sources */,
-				C480A84B2BEAE91F00B02160 /* EditTaskNoProjectView.swift in Sources */,
 				C4DFF4182BD4815400D36F7E /* Organizer.xcdatamodeld in Sources */,
 				C44830892BDEB40A00525CE6 /* SupportingDatePickerSheet.swift in Sources */,
 				C4DFF4422BD575FC00D36F7E /* TaskRowView.swift in Sources */,
-				C480A8472BEAE8FC00B02160 /* AddTaskNoProjectView.swift in Sources */,
 				C480A83B2BE565B900B02160 /* ProjectsListView.swift in Sources */,
 				C480A8412BE6CBC500B02160 /* SupportingTabsViews.swift in Sources */,
 				C4A341DD2BE3D44300A8CB5E /* SupportingLocationPicker.swift in Sources */,
@@ -823,20 +804,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C44210EB2BDDA5B3009154B1 /* MijickNavigattie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C44210EA2BDDA5B3009154B1 /* XCRemoteSwiftPackageReference "Navigattie" */;
-			productName = MijickNavigattie;
-		};
-		C44210EE2BDDA88F009154B1 /* MijickCalendarView */ = {
+		C480A84C2BEBEBAA00B02160 /* MijickCalendarView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C44210ED2BDDA88F009154B1 /* XCRemoteSwiftPackageReference "CalendarView" */;
 			productName = MijickCalendarView;
 		};
-		C480A82F2BE45DD200B02160 /* PartialSheet */ = {
+		C480A84E2BEBEBB300B02160 /* MijickNavigattie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C40731202BE45CEB0021407F /* XCRemoteSwiftPackageReference "PartialSheet" */;
-			productName = PartialSheet;
+			package = C44210EA2BDDA5B3009154B1 /* XCRemoteSwiftPackageReference "Navigattie" */;
+			productName = MijickNavigattie;
 		};
 /* End XCSwiftPackageProductDependency section */
 

@@ -177,23 +177,4 @@ struct ProjectTasksListView: View {
             self.selectedProject = nil
         }
     }
-
-    private func addProjectTask() {
-        withAnimation {
-            let newProjectTask = ProjectTask(context: viewContext)
-            newProjectTask.dateCreated = Date()
-            newProjectTask.dateDue = Date()
-            newProjectTask.title = "New Task"
-            newProjectTask.isCompleted = false
-            newProjectTask.priority = 1
-            newProjectTask.project = self.project
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
 }

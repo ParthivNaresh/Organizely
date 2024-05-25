@@ -10,7 +10,6 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var settingsDetent = PresentationDetent.fraction(0.2)
     @State private var selectedTab: Int = 0
     @State private var isShowingAddProject = false
     @State private var isShowingAddTask = false
@@ -106,28 +105,13 @@ struct ContentView: View {
                 .padding(.bottom, 75)
             }
             .sheet(isPresented: $showingNewTaskSheet) {
-                AddTaskNoProjectView(isVisible: $showingNewTaskSheet)
-                    .focused($isInputActive)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                     )
+                AddTaskView(isVisible: $showingNewTaskSheet)
             }
             .sheet(isPresented: $showingNewProjectSheet) {
                 AddProjectView(isVisible: $showingNewProjectSheet)
-                    .focused($isInputActive)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                     )
             }
             .sheet(isPresented: $showingNewTaskInProjectSheet) {
-                AddTaskInProjectView(isVisible: $showingNewTaskInProjectSheet, selectedProject: $selectedProject)
-                    .focused($isInputActive)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                     )
+                AddTaskView(isVisible: $showingNewTaskInProjectSheet, selectedProject: $selectedProject)
             }
         }
     }

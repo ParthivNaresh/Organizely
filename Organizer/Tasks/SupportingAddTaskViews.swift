@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import MapKit
 import Combine
+import MijickCalendarView
 
 struct NewTaskTitleAndDescriptionView: View {
     @Binding var taskName: String
@@ -31,7 +33,62 @@ struct NewTaskTitleAndDescriptionView: View {
     }
 }
 
+struct NewSubtaskTitleAndDescriptionView: View {
+    @Binding var subtaskName: String
+    @Binding var subtaskDescription: String
+    @FocusState var isInputActive: Bool
+    @Binding var showError: Bool
+    
+    var body: some View{
+        VStack(spacing: 0) {
+            TextField("e.g. Take cat to the vet Friday at 3p.m.", text: $subtaskName)
+                .onReceive(Just(subtaskName)) { newValue in
+                    showError = newValue.isEmpty
+                }
+                .focused($isInputActive)
+                .padding(EdgeInsets(top: 8, leading: 15, bottom: 4, trailing: 0))
+                .font(.system(size: 18, weight: .semibold))
+            TextField("Subtask Description", text: $subtaskDescription)
+                .padding(EdgeInsets(top: 8, leading: 15, bottom: 8, trailing: 0))
+                .font(.system(size: 16, weight: .light))
+        }
+        .background(Color.clear)
+    }
+}
+
 struct TaskControlButtonsView: View {
+    @Binding var showPriorityList: Bool
+    @Binding var selectedPriority: Priority?
+    @Binding var showDatePicker: Bool
+    @Binding var dateDue: Date?
+    @Binding var showLabelList: Bool
+    @Binding var selectedLabel: TaskLabel?
+    @Binding var showingLocationPicker: Bool
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                NewTaskTodayButtonView(
+                    showDatePicker: $showDatePicker,
+                    dateDue: $dateDue
+                )
+                NewTaskPriorityButtonView(
+                    showPriorityList: $showPriorityList,
+                    selectedPriority: $selectedPriority
+                )
+                NewTaskReminderButtonView()
+                NewTaskLabelsButtonView(
+                    showLabelList: $showLabelList,
+                    selectedLabel: $selectedLabel
+                )
+                NewTaskLocationButtonView(showingLocationPicker: $showingLocationPicker)
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+}
+
+struct SubtaskControlButtonsView: View {
     @Binding var showPriorityList: Bool
     @Binding var selectedPriority: Priority?
     @Binding var showDatePicker: Bool
@@ -309,7 +366,7 @@ struct NewTaskLocationButtonView: View {
     }
 }
 
-struct NewTaskAddTaskButtonView: View {
+struct NewSubtaskSubmitSubtaskButtonView: View {
     var action: () -> Void
     var isEnabled: Bool
 
@@ -327,3 +384,166 @@ struct NewTaskAddTaskButtonView: View {
         }
     }
 }
+
+struct NewSubtaskAddSubtaskButtonView: View {
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: "plus")
+                    .imageScale(.small)
+                    .foregroundColor(.blue)
+                Text("Add Subtask")
+                    .fontWeight(.light)
+                    .font(.system(size: 16))
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 10)
+        }
+        .padding(.horizontal, 10)
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct SubtasksListView: View {
+    var task: ProjectTask
+    @FetchRequest private var projectSubtasks: FetchedResults<ProjectSubtask>
+    
+    init(task: ProjectTask) {
+        self.task = task
+        _projectSubtasks = FetchRequest(
+            entity: ProjectSubtask.entity(),
+            sortDescriptors: [NSSortDescriptor(keyPath: \ProjectSubtask.title, ascending: true)],
+            predicate: NSPredicate(format: "task == %@", task)
+        )
+    }
+
+    var body: some View {
+        VStack {
+            List{
+                ForEach(projectSubtasks, id: \.self) { subtask in
+                    SubtaskRowView(subtask: subtask)
+                }
+            }
+        }
+    }
+}
+
+struct SubtaskRowView: View {
+    @Environment(\.managedObjectContext) var viewContext
+    @ObservedObject var subtask: ProjectSubtask
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(subtask.title ?? "Untitled")
+                    .font(.headline)
+                Text(subtask.subtaskDescription ?? "No description")
+                    .font(.subheadline)
+            }
+            Spacer()
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Priority: ")
+                        .foregroundColor(.black)
+                    Text(getPriorityLevel(fromLevel: subtask.priority))
+                        .foregroundColor(priorityColor(for: subtask.priority))
+                }
+                .font(.caption)
+                HStack {
+                    Text("Label: ")
+                        .foregroundColor(.black)
+                    Text(getTaskLabel(fromLabel: subtask.taskLabel ?? "Misc"))
+                        .foregroundColor(labelColor(for: subtask.taskLabel))
+                }
+                .font(.caption)
+            }
+        }
+    }
+    
+    private func getPriorityLevel(fromLevel level: Int64) -> String {
+        return Constants.priorities.first { $0.level == Int(level) }?.name ?? "Medium"
+    }
+    
+    private func getTaskLabel(fromLabel taskLabel: String) -> String {
+        return Constants.labels.first { $0.name == taskLabel }?.name ?? "Misc"
+    }
+    
+    private func priorityColor(for priority: Int64) -> Color {
+        return Constants.priorities.first { $0.level == Int(priority) }?.color ?? .black
+    }
+    
+    private func labelColor(for taskLabel: String?) -> Color {
+        return Constants.labels.first { $0.name == taskLabel }?.color ?? .black
+    }
+}
+
+struct NewTaskSubmitTaskButtonView: View {
+    var action: () -> Void
+    var isEnabled: Bool
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: action) {
+                Image(systemName: "arrow.up.circle.fill")
+                    .resizable()
+                    .frame(width: 35, height: 35)
+                    .foregroundColor(isEnabled ? .blue : .gray)
+            }
+            .disabled(!isEnabled)
+            .padding(.trailing, 20)
+        }
+    }
+}
+
+
+struct PrioritySelectionView: View {
+    @Binding var showPriorityList: Bool
+    @Binding var selectedPriority: Priority?
+
+    var body: some View {
+        Group {
+            if showPriorityList {
+                PrioritySelectionOverlay(showPriorityList: $showPriorityList, selectedPriority: $selectedPriority)
+                    .alignmentGuide(.top) { _ in 50 }
+            }
+        }
+    }
+}
+
+struct LabelSelectionOverlayView: View {
+    @Binding var showLabelList: Bool
+    @Binding var selectedLabel: TaskLabel?
+
+    var body: some View {
+        Group {
+            if showLabelList {
+                LabelSelectionOverlay(showLabelList: $showLabelList, selectedLabel: $selectedLabel)
+                    .alignmentGuide(.top) { _ in 50 }
+            }
+        }
+    }
+}
+
+struct DatePickerSheetContentView: View {
+    @Binding var dateDue: Date?
+    @Binding var showingDatePicker: Bool
+    @Binding var selectedRange: MDateRange?
+
+    var body: some View {
+        DatePickerSheetView(dateDue: $dateDue, showingDatePicker: $showingDatePicker, selectedRange: $selectedRange)
+    }
+}
+
+struct LocationPickerSheetContentView: View {
+    @Binding var showingLocationPicker: Bool
+    @Binding var selectedLocation: CLLocationCoordinate2D?
+
+    var body: some View {
+        LocationPickerSheetView(showingLocationPicker: $showingLocationPicker, selectedLocation: $selectedLocation)
+    }
+}
+
+

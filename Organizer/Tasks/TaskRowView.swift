@@ -9,9 +9,8 @@ import SwiftUI
 
 struct TaskRowView: View {
     @ObservedObject var task: ProjectTask
-    var project: Project?
+    @State var project: Project?
     @Environment(\.managedObjectContext) var viewContext
-    @State private var settingsDetent = PresentationDetent.fraction(0.2)
     @State private var address: String = "Loading address..."
     @State private var isShowingDetails = false
 
@@ -34,11 +33,13 @@ struct TaskRowView: View {
                     .font(.caption)
                     .foregroundColor(.gray)
             }
+            /*
             .onAppear {
                 reverseGeocode(latitude: task.latitude, longitude: task.longitude) { addressString in
                     self.address = addressString
                 }
             }
+             */
             Spacer()
             VStack(alignment: .leading) {
                 HStack {
@@ -65,18 +66,10 @@ struct TaskRowView: View {
             self.isShowingDetails = true
         }
         .sheet(isPresented: $isShowingDetails) {
-            if let project = project {
-                EditTaskInProjectView(isVisible: $isShowingDetails, project: project, task: task)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                    )
+            if project != nil {
+                AddTaskView(isVisible: $isShowingDetails, selectedProject: $project, task: task)
             } else {
-                EditTaskNoProjectView(isVisible: $isShowingDetails, task: task)
-                    .presentationDetents(
-                        [.fraction(0.2)],
-                        selection: $settingsDetent
-                    )
+                AddTaskView(isVisible: $isShowingDetails, task: task)
             }
         }
     }

@@ -13,7 +13,7 @@ struct TasksListView: View {
     var project: Project?
     
     @FetchRequest private var projectTasks: FetchedResults<ProjectTask>
-    
+
     init(project: Project? = nil) {
         self.project = project
         let predicate: NSPredicate

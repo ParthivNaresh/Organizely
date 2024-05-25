@@ -23,6 +23,7 @@ struct AddProjectView: View {
     @State private var showPriorityList = false
     @State private var attemptToSubmit: Bool = false
     @State private var showError: Bool = false
+    @State private var settingsDetent = PresentationDetent.fraction(0.2)
     
     var body: some View {
         ScrollView {
@@ -48,6 +49,10 @@ struct AddProjectView: View {
                 }, alignment: .topLeading
             )
         }
+        .presentationDetents(
+            [.fraction(0.2)],
+            selection: $settingsDetent
+         )
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(UIColor.white)))
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
